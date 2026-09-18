@@ -1,0 +1,2828 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1, user-scalable=no">
+<title>Happy Birthday</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,500&family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,600;1,9..144,500&family=Quicksand:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+/* ============================================================
+   BIRTHDAY WEBSITE — STYLE
+   Palette: deep red / rose / blush / cream / peach / gold
+   ============================================================ */
+
+:root{
+  --deep-red:   #7d1f36;
+  --rose:       #c7456b;
+  --blush:      #f6d9e1;
+  --cream:      #fdf5ee;
+  --peach:      #f3c6a4;
+  --gold:       #d3a25b;
+  --ink:        #3a1420;
+  --white:      #ffffff;
+
+  --accent: var(--rose);
+  --bg-1: var(--cream);
+  --bg-2: var(--blush);
+
+  --shadow-soft: 0 18px 40px rgba(125,31,54,0.18);
+  --shadow-deep: 0 24px 60px rgba(58,20,32,0.28);
+
+  --font-display: "Fraunces", "Cormorant Garamond", serif;
+  --font-script: "Cormorant Garamond", serif;
+  --font-body: "Quicksand", sans-serif;
+
+  --radius-lg: 28px;
+  --radius-md: 18px;
+  --radius-sm: 10px;
+
+  --motion: 1;
+
+  /* shared cinematic easing — smooth deceleration, no stiff/linear snaps */
+  --ease-smooth: cubic-bezier(.22,.61,.36,1);
+  --ease-soft: cubic-bezier(.33,.1,.2,1);
+}
+
+*{ box-sizing:border-box; }
+html,body{
+  margin:0; padding:0;
+  width:100%; overflow-x:hidden;
+}
+body{
+  font-family: var(--font-body);
+  color: var(--ink);
+  background: linear-gradient(160deg, var(--cream) 0%, var(--blush) 55%, var(--peach) 100%);
+  min-height:100vh;
+  position:relative;
+}
+h1,h2,h3{ font-family: var(--font-display); margin:0; }
+button{ font-family: var(--font-body); }
+img{ max-width:100%; display:block; }
+.hidden{ display:none !important; }
+
+::selection{ background: var(--rose); color:#fff; }
+
+/* ---------- ambient background ---------- */
+.ambient{
+  position:fixed; inset:0; z-index:0; pointer-events:none; overflow:hidden;
+}
+.glow{
+  position:absolute; border-radius:50%; filter: blur(60px); opacity:.55;
+}
+.glow-a{ width:60vw; height:60vw; background: radial-gradient(circle, var(--peach), transparent 70%); top:-15vw; left:-15vw; }
+.glow-b{ width:55vw; height:55vw; background: radial-gradient(circle, var(--rose), transparent 70%); bottom:-20vw; right:-15vw; opacity:.35; }
+#petalCanvas{ position:absolute; inset:0; width:100%; height:100%; }
+.sparkles{ position:absolute; inset:0; }
+.sparkle{
+  position:absolute; width:4px; height:4px; border-radius:50%;
+  background: var(--gold);
+  box-shadow: 0 0 8px 2px rgba(211,162,91,.8);
+  animation: sparkleTwinkle 2.6s ease-in-out infinite;
+}
+@keyframes sparkleTwinkle{
+  0%,100%{ opacity:.15; transform: scale(.7); }
+  50%{ opacity:1; transform: scale(1.15); }
+}
+
+/* ---------- layout shell ---------- */
+main{ position:relative; z-index:1; min-height:100vh; }
+.screen{
+  min-height:100vh;
+  width:100%;
+  display:none;
+  align-items:center;
+  justify-content:center;
+  padding: 32px 20px 56px;
+  position:relative;
+}
+.screen.active{ display:flex; }
+.screen-inner{
+  width:100%;
+  max-width:520px;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  text-align:center;
+  animation: screenIn 1.1s var(--ease-smooth);
+}
+@keyframes screenIn{
+  from{ opacity:0; transform: translateY(22px) scale(.97); }
+  60%{ opacity:1; }
+  to{ opacity:1; transform:none; }
+}
+
+/* ---------- buttons ---------- */
+.btn{
+  border:none; cursor:pointer;
+  font-family: var(--font-body);
+  font-weight:600;
+  font-size:1rem;
+  padding:15px 30px;
+  border-radius: 999px;
+  min-height:48px;
+  transition: transform .35s var(--ease-smooth), box-shadow .35s var(--ease-smooth), opacity .35s ease;
+  touch-action: manipulation;
+}
+.btn:active{ transform: scale(.97); transition-duration: .15s; }
+.btn-primary{
+  background: linear-gradient(135deg, var(--rose), var(--deep-red));
+  color:#fff;
+  box-shadow: var(--shadow-soft);
+}
+.btn-primary:hover{ box-shadow: var(--shadow-deep); transform: translateY(-2px); }
+.btn-glow{ animation: btnPulse 3.2s var(--ease-soft) infinite; }
+@keyframes btnPulse{
+  0%,100%{ box-shadow: 0 0 0 0 rgba(199,69,107,.3), var(--shadow-soft); }
+  50%{ box-shadow: 0 0 0 16px rgba(199,69,107,0), var(--shadow-soft); }
+}
+.btn-ghost{
+  background: rgba(255,255,255,.5);
+  color: var(--deep-red);
+  border: 1.5px solid rgba(125,31,54,.25);
+}
+.btn-tiny{
+  background: rgba(255,255,255,.6);
+  color: var(--deep-red);
+  border: 1px solid rgba(125,31,54,.2);
+  padding:8px 16px; font-size:.85rem; border-radius:999px;
+}
+.btn-danger{
+  background: var(--deep-red); color:#fff; border-radius: 10px; padding:10px 20px;
+}
+.btn-danger-outline{
+  color: #b3273f; border-color: rgba(179,39,63,.35); background: rgba(179,39,63,.06);
+}
+.balloon-bulk-actions{ margin: 4px 0 2px; }
+.btn-arrow{ display:inline-block; transition: transform .25s ease; }
+.btn:hover .btn-arrow{ transform: translateX(4px); }
+.btn-continue{ margin-top:26px; }
+.btn-restart{ margin-top:22px; }
+
+/* ---------- sound toggle / progress ---------- */
+.sound-toggle{
+  position:fixed; top:16px; right:16px; z-index:50;
+  width:42px; height:42px; border-radius:50%;
+  border:1px solid rgba(125,31,54,.2);
+  background: rgba(255,255,255,.65);
+  backdrop-filter: blur(6px);
+  font-size:1.1rem; cursor:pointer;
+  box-shadow: var(--shadow-soft);
+  transition: transform .3s var(--ease-smooth), background .3s ease;
+}
+.sound-toggle:active{ transform: scale(.92); }
+.music-toggle{ top:64px; }
+.music-toggle.is-muted{ opacity:.55; }
+.progress-rail{
+  position:fixed; top:16px; left:16px; z-index:50;
+  display:flex; gap:6px;
+}
+.progress-rail .dot{
+  width:7px; height:7px; border-radius:50%;
+  background: rgba(125,31,54,.2);
+  transition: all .5s var(--ease-smooth);
+}
+.progress-rail .dot.done{ background: var(--rose); width:16px; border-radius:5px; }
+.progress-rail .dot.now{ background: var(--deep-red); }
+
+/* ---------- STEP 1 opening ---------- */
+.eyebrow-soft{
+  font-family: var(--font-script);
+  font-style:italic; font-size:1.05rem;
+  color: var(--rose); margin-bottom:6px; letter-spacing:.02em;
+}
+.opening-title{
+  font-size: clamp(2.4rem, 9vw, 3.6rem);
+  color: var(--deep-red);
+  margin-bottom:14px;
+  animation: floatSoft 6s ease-in-out infinite;
+}
+.opening-text{
+  font-size:1.05rem; line-height:1.6; color:#5c2634;
+  max-width:380px; margin: 0 auto 34px;
+}
+@keyframes floatSoft{
+  0%,100%{ transform: translateY(0); }
+  50%{ transform: translateY(-6px); }
+}
+
+/* ---------- STEP 1.5 envelope ---------- */
+.envelope-inner{ gap:6px; }
+.envelope{
+  position:relative; width: min(300px, 78vw); aspect-ratio: 3/2;
+  margin: 20px auto 8px; cursor:pointer;
+}
+.envelope::before{
+  content:""; position:absolute; inset:-18%;
+  border-radius:50%;
+  background: radial-gradient(circle, rgba(211,162,91,.5), rgba(199,69,107,.25) 45%, transparent 72%);
+  opacity:0; transform: scale(.7);
+  transition: opacity 1.1s var(--ease-smooth), transform 1.4s var(--ease-smooth);
+  pointer-events:none; z-index:0; filter: blur(6px);
+}
+.envelope.open::before{ opacity:1; transform: scale(1.15); animation: envelopeGlowPulse 2.6s ease-in-out .6s infinite; }
+@keyframes envelopeGlowPulse{
+  0%,100%{ opacity:.75; }
+  50%{ opacity:1; }
+}
+.envelope-back{
+  position:absolute; inset:0;
+  background: linear-gradient(160deg, var(--peach), var(--blush));
+  border-radius: 12px;
+  box-shadow: var(--shadow-soft);
+}
+.envelope-front{
+  position:absolute; left:0; right:0; bottom:0; height:62%;
+  background: linear-gradient(160deg, #fff4ea, var(--peach));
+  border-radius: 0 0 12px 12px;
+  box-shadow: inset 0 2px 0 rgba(255,255,255,.6);
+  z-index:3;
+}
+.envelope-flap{
+  position:absolute; left:0; right:0; top:0; height:60%;
+  background: linear-gradient(160deg, var(--rose), var(--deep-red));
+  clip-path: polygon(0 0, 100% 0, 50% 62%);
+  transform-origin: top center;
+  transition: transform 1.3s var(--ease-smooth);
+  z-index:4;
+  border-radius: 12px 12px 0 0;
+}
+.envelope.open .envelope-flap{ transform: rotateX(180deg); z-index:1; }
+.envelope-seal{
+  position:absolute; left:50%; top:38%; transform: translate(-50%,-50%);
+  width:40px; height:40px; border-radius:50%;
+  background: radial-gradient(circle at 35% 30%, var(--gold), #a97a30);
+  color:#fff; display:flex; align-items:center; justify-content:center;
+  font-size:1.1rem; z-index:5; box-shadow: 0 6px 14px rgba(0,0,0,.25);
+  transition: opacity .45s ease, transform .45s var(--ease-smooth);
+}
+.envelope.open .envelope-seal{ opacity:0; transform: translate(-50%,-50%) scale(.3) rotate(25deg); }
+.letter{
+  position:absolute; left:6%; right:6%; top:-8%; bottom:14%;
+  background: var(--cream);
+  border-radius: 8px;
+  box-shadow: 0 10px 24px rgba(0,0,0,.18);
+  padding: 18px 16px;
+  display:flex; align-items:center; text-align:left;
+  z-index:2;
+  transform: translateY(6%) scale(.94);
+  transition: transform 1.35s var(--ease-smooth) .55s;
+  overflow:hidden;
+}
+.envelope.open .letter{ transform: translateY(-60%) scale(1); z-index:6; }
+.letter p{
+  font-family: var(--font-script); font-size:1.05rem; line-height:1.55;
+  color: var(--ink); margin:0;
+  opacity:0; transform: translateY(6px);
+  transition: opacity .9s ease 1.7s, transform .9s var(--ease-smooth) 1.7s;
+}
+.envelope.open .letter p{ opacity:1; transform:none; }
+.tap-hint{ font-size:.85rem; color: var(--rose); opacity:.8; margin-top:14px; animation: fadeBlink 2s ease-in-out infinite; }
+@keyframes fadeBlink{ 0%,100%{opacity:.4;} 50%{opacity:.9;} }
+
+.choice-row{ margin-top: 40px; }
+.choice-question{ font-size:1rem; margin-bottom:14px; color:#5c2634; }
+.choice-buttons{ position:relative; display:flex; gap:16px; justify-content:center; min-height:56px; align-items:center; }
+#noBtn{ transition: transform .55s var(--ease-smooth); position:relative; }
+
+/* ---------- STEP 2 balloons ---------- */
+.step-title{ font-size: clamp(1.7rem,6vw,2.2rem); color: var(--deep-red); margin-bottom:4px; }
+.step-sub{ color:#7a3b4b; font-size:.95rem; margin-bottom:10px; }
+.balloons-inner{ position:relative; min-height:70vh; justify-content:flex-start; padding-top:6px; }
+.teddy{ position:absolute; font-size:2.4rem; animation: teddyFloat 4.5s ease-in-out infinite; filter: drop-shadow(0 8px 10px rgba(0,0,0,.15)); opacity:.9; }
+.teddy-left{ left:-4px; bottom:6%; }
+.teddy-right{ right:-4px; bottom:2%; animation-delay:1s; }
+.teddy-cake-left{ left:2%; bottom:8%; }
+.teddy-cake-right{ right:2%; bottom:4%; animation-delay:1.3s; }
+.teddy-final{ font-size:3rem; margin-bottom:10px; animation: teddyFloat 5s ease-in-out infinite; }
+@keyframes teddyFloat{
+  0%,100%{ transform: translateY(0) rotate(-2deg); }
+  50%{ transform: translateY(-10px) rotate(2deg); }
+}
+
+.balloon-field{
+  position:relative;
+  width:100%; max-width: 420px;
+  height: 46vh; min-height:320px;
+  margin: 10px auto 4px;
+  --balloon-scale: 1;
+}
+.balloon{
+  position:absolute;
+  width: calc(78px * var(--balloon-scale, 1));
+  height: calc(96px * var(--balloon-scale, 1));
+  cursor:pointer;
+  animation: balloonBob 4.8s ease-in-out infinite;
+  transition: transform .4s var(--ease-smooth);
+  touch-action: manipulation;
+}
+.balloon:active{ transform: scale(.95); }
+.balloon svg{ width:100%; height:100%; filter: drop-shadow(0 10px 14px rgba(0,0,0,.18)); }
+.balloon.popped{ pointer-events:none; animation: balloonPop .6s var(--ease-smooth) forwards; }
+@keyframes balloonPop{
+  0%{ transform: scale(1); opacity:1; }
+  45%{ transform: scale(1.18); opacity:.85; }
+  100%{ transform: scale(0.15); opacity:0; }
+}
+@keyframes balloonBob{
+  0%,100%{ transform: translateY(0) rotate(-3deg); }
+  50%{ transform: translateY(-14px) rotate(3deg); }
+}
+.balloon-modal-backdrop{
+  position:fixed; inset:0; z-index:68;
+  background: rgba(58,20,32,.38);
+  backdrop-filter: blur(2px);
+  opacity:0; transition: opacity .4s var(--ease-smooth);
+  pointer-events:none;
+}
+.balloon-modal-backdrop.show{ opacity:1; pointer-events:auto; }
+.balloon-message-card{
+  position:fixed; left:50%; top:50%; z-index:69;
+  transform: translate(-50%,-50%) scale(.85);
+  width: min(320px, 84vw);
+  background: #ffffff;
+  border: 1px solid rgba(255,255,255,.9);
+  border-radius: var(--radius-md);
+  padding: 26px 24px 22px;
+  box-shadow: var(--shadow-deep);
+  text-align:center;
+  opacity:0;
+  pointer-events:none;
+  transition: opacity .45s var(--ease-smooth), transform .45s var(--ease-smooth);
+}
+.balloon-message-card.show{
+  opacity:1; pointer-events:auto;
+  transform: translate(-50%,-50%) scale(1);
+}
+@keyframes cardPopIn{
+  from{ opacity:0; transform: translate(-50%,-50%) scale(.85); }
+  to{ opacity:1; transform: translate(-50%,-50%) scale(1); }
+}
+.balloon-message{
+  min-height: 40px; font-family: var(--font-script); font-size:1.25rem;
+  color: var(--deep-red); line-height:1.5; margin:0 0 18px; position:relative; z-index:2;
+}
+.balloon-message-close{ padding:10px 26px; font-size:.9rem; }
+.btn-small{ min-height:40px; }
+.confetti-piece{
+  position:fixed; top:-10px; width:8px; height:14px; z-index:60; pointer-events:none;
+  animation: confettiFall linear forwards;
+}
+@keyframes confettiFall{
+  to{ transform: translateY(110vh) rotate(540deg); opacity:.9; }
+}
+
+/* ---------- tap-anywhere tiny heart burst ---------- */
+.heart-burst-layer{
+  position:fixed; inset:0; z-index:65; pointer-events:none; overflow:hidden;
+}
+.mini-heart{
+  position:absolute; will-change: transform, opacity;
+  animation: miniHeartBurst .95s var(--ease-smooth) forwards;
+}
+@keyframes miniHeartBurst{
+  0%{ opacity:0; transform: translate(0,0) scale(.3) rotate(var(--rot,0deg)); }
+  15%{ opacity:1; }
+  100%{ opacity:0; transform: translate(var(--dx,0px), var(--dy,-40px)) scale(1) rotate(var(--rot,0deg)); }
+}
+
+/* decorative burst used behind the balloon message card (hearts/petals/sparkles) */
+.decor-bit{
+  position:absolute; pointer-events:none; will-change: transform, opacity;
+  animation: decorFloat 1.1s var(--ease-smooth) forwards;
+}
+@keyframes decorFloat{
+  0%{ opacity:0; transform: translate(0,0) scale(.4) rotate(0deg); }
+  20%{ opacity:1; }
+  100%{ opacity:0; transform: translate(var(--dx,0px), var(--dy,-30px)) scale(1) rotate(var(--rot,20deg)); }
+}
+
+/* ---------- STEP 3 cake ---------- */
+.cake-inner{ min-height:78vh; }
+.cake-stage{ position:relative; width:100%; display:flex; justify-content:center; margin-top:6px; }
+.cake-wrap{
+  position:relative; width: min(340px, 88vw); aspect-ratio: 320/300;
+}
+.cake-svg{ width:100%; height:100%; filter: drop-shadow(0 22px 26px rgba(125,31,54,.28)); touch-action: manipulation; cursor:pointer; }
+.flame{ animation: flicker 1.1s ease-in-out infinite; transform-origin: center bottom; }
+@keyframes flicker{
+  0%,100%{ transform: scaleY(1) rotate(0deg); }
+  40%{ transform: scaleY(1.12) rotate(-3deg); }
+  70%{ transform: scaleY(.92) rotate(2deg); }
+}
+.crumbs{ position:absolute; inset:0; pointer-events:none; }
+.crumb{
+  position:absolute; width:6px; height:6px; border-radius:2px;
+  background: var(--gold);
+  animation: crumbFall .85s var(--ease-smooth) forwards;
+}
+@keyframes crumbFall{
+  from{ transform: translateY(0) rotate(0); opacity:1; }
+  to{ transform: translateY(46px) rotate(180deg); opacity:0; }
+}
+/* cake cuts are an instant hard cut — no grow-in / slide animation on the mask itself */
+.bite-mark{ animation: none; }
+.cake-svg{ transition: opacity 1s var(--ease-smooth), transform 1s var(--ease-smooth); }
+.cake-progress{ margin-top:18px; font-size:.9rem; color: var(--rose); transition: opacity .3s ease; }
+
+/* ---------- STEP 4a password (date-based) ---------- */
+.password-inner{ min-height:70vh; }
+.date-picker-wrap{ margin: 26px 0 12px; display:flex; justify-content:center; }
+.date-input{
+  font-family: var(--font-body); font-weight:600; font-size:1.15rem;
+  text-align:center; color: var(--deep-red);
+  padding:16px 22px; min-width: 220px;
+  border-radius: 16px; border: 1.5px solid rgba(125,31,54,.25);
+  background: rgba(255,255,255,.75);
+  outline:none;
+  transition: border-color .3s ease, box-shadow .3s ease, transform .2s ease;
+}
+.date-input:focus{ border-color: var(--rose); box-shadow: 0 0 0 4px rgba(199,69,107,.15); }
+.pin-error{ color: var(--deep-red); font-size:.9rem; margin-bottom:10px; }
+.date-picker-wrap.shake{ animation: shakeRow .5s var(--ease-smooth); }
+@keyframes shakeRow{
+  0%,100%{ transform: translateX(0); }
+  25%{ transform: translateX(-7px); }
+  50%{ transform: translateX(6px); }
+  75%{ transform: translateX(-4px); }
+}
+
+/* ---------- STEP 4b memories ---------- */
+.memories-inner{ min-height:82vh; }
+.memory-viewer{ display:flex; align-items:center; gap:8px; width:100%; justify-content:center; margin-top:10px; }
+.mem-nav{
+  background: rgba(255,255,255,.7); border: 1px solid rgba(125,31,54,.2);
+  width:38px; height:38px; border-radius:50%; font-size:1.3rem; color: var(--deep-red);
+  cursor:pointer; flex-shrink:0; box-shadow: var(--shadow-soft);
+}
+.memory-viewer{ overflow:hidden; padding: 4px 0; }
+.memory-card{
+  width: min(260px, 62vw);
+  opacity:1; transform: translateX(0) scale(1);
+  transition: opacity .95s var(--ease-smooth), transform .95s var(--ease-smooth);
+}
+.memory-card.mc-enter-next{ opacity:0; transform: translateX(46px) scale(.95); transition:none; }
+.memory-card.mc-enter-prev{ opacity:0; transform: translateX(-46px) scale(.95); transition:none; }
+.memory-photo-frame{
+  position:relative;
+  width:100%; aspect-ratio: 9/16;
+  border-radius: var(--radius-lg);
+  overflow:hidden;
+  box-shadow: var(--shadow-deep);
+  border: 3px solid rgba(255,255,255,.7);
+  background: linear-gradient(160deg, var(--peach), var(--rose));
+}
+.memory-photo{ width:100%; height:100%; object-fit:cover; }
+.memory-photo-fallback{
+  position:absolute; inset:0; display:flex; align-items:center; justify-content:center;
+  font-size:2.6rem; color:#fff; opacity:.85;
+}
+.memory-date{ margin-top:14px; font-size:.85rem; letter-spacing:.03em; color: var(--rose); font-weight:600; }
+.memory-title{ font-family: var(--font-display); font-size:1.3rem; color: var(--deep-red); margin-top:2px; }
+.memory-desc{ font-size:.92rem; color:#5c2634; margin-top:6px; line-height:1.5; }
+.memory-caption{ font-family: var(--font-script); font-style:italic; font-size:.95rem; color: var(--rose); margin-top:6px; }
+.memory-controls{ display:flex; align-items:center; gap:14px; margin-top:16px; }
+.memory-index{ font-size:.85rem; color:#7a3b4b; }
+.timeline-dots{ display:flex; gap:5px; margin-top:14px; max-width:280px; flex-wrap:wrap; justify-content:center; }
+.timeline-dots .tdot{ width:6px; height:6px; border-radius:50%; background: rgba(125,31,54,.25); cursor:pointer; }
+.timeline-dots .tdot.active{ background: var(--rose); width:14px; border-radius:4px; }
+
+/* ---------- STEP 5 final — cinematic slow scroll ---------- */
+.final-inner{ min-height:88vh; justify-content:center; }
+.final-title{
+  color: var(--deep-red); font-size:1.5rem; margin-bottom:6px;
+  opacity:0; animation: lineIn 1.2s var(--ease-smooth) forwards;
+}
+.final-scroll-viewport{
+  position:relative;
+  width:100%; max-width:440px;
+  height: min(56vh, 460px);
+  overflow-y: auto;
+  overflow-x: hidden;
+  -webkit-overflow-scrolling: touch;
+  overscroll-behavior-y: contain;
+  margin: 8px 0 4px;
+  -webkit-mask-image: linear-gradient(to bottom, transparent 0, #000 6%, #000 94%, transparent 100%);
+  mask-image: linear-gradient(to bottom, transparent 0, #000 6%, #000 94%, transparent 100%);
+  scrollbar-width: none;
+}
+.final-scroll-viewport::-webkit-scrollbar{ display:none; width:0; height:0; }
+.final-scroll-track{
+  display:flex; flex-direction:column; align-items:center;
+  padding-top: 8vh;
+  padding-bottom: 42vh;
+}
+@keyframes lineIn{ from{ opacity:0; transform: translateY(10px); } to{ opacity:1; transform:none; } }
+.final-letter{ display:flex; flex-direction:column; gap:20px; max-width:400px; padding: 0 12px; }
+.final-letter p{
+  font-family: var(--font-script); font-size: var(--final-text-size, 1.3rem); line-height:1.75; color: var(--ink);
+  text-align:center; margin:0;
+}
+.final-signoff{ margin-top:30px; color: var(--deep-red); font-family: var(--font-display); font-size:1.3rem; text-align:center; padding-bottom: 30px; }
+.final-inner .btn-restart{ opacity:0; animation: lineIn 1s ease forwards; animation-delay: 1.4s; }
+
+/* ---------- ADMIN DOT + PANEL ---------- */
+.admin-dot{
+  position:fixed; bottom:6px; left:6px; z-index:80;
+  width:30px; height:30px; padding:0;
+  background: transparent; border:none; cursor:pointer;
+  display:flex; align-items:center; justify-content:center;
+}
+.admin-dot::after{
+  content:""; display:block; width:5px; height:5px; border-radius:50%;
+  background: rgba(125,31,54,.15);
+  transition: background .3s var(--ease-smooth), transform .3s var(--ease-smooth);
+}
+.admin-dot:hover::after, .admin-dot:active::after{
+  background: rgba(125,31,54,.55); transform: scale(1.6);
+}
+
+.admin-overlay{
+  position:fixed; inset:0; z-index:200;
+  background: rgba(58,20,32,.55); backdrop-filter: blur(4px);
+  display:flex; align-items:flex-end; justify-content:center;
+}
+.admin-panel{
+  background: var(--cream);
+  width:100%; max-width:640px; max-height:92vh;
+  border-radius: 22px 22px 0 0;
+  display:flex; flex-direction:column;
+  box-shadow: 0 -10px 40px rgba(0,0,0,.3);
+  animation: panelUp .5s var(--ease-smooth);
+}
+@keyframes panelUp{ from{ transform: translateY(34px); opacity:.5; } to{ transform:none; opacity:1; } }
+.admin-header{ display:flex; align-items:center; justify-content:space-between; padding:16px 20px; border-bottom:1px solid rgba(125,31,54,.12); }
+.admin-header h2{ font-size:1.2rem; color: var(--deep-red); }
+.admin-close{ background:none; border:none; font-size:1.1rem; cursor:pointer; color: var(--deep-red); width:34px; height:34px; border-radius:50%; }
+.admin-close:hover{ background: rgba(125,31,54,.1); }
+.admin-tabs{ display:flex; gap:6px; padding: 10px 14px; overflow-x:auto; border-bottom:1px solid rgba(125,31,54,.1); }
+.admin-tab{
+  flex-shrink:0; background: rgba(125,31,54,.06); border:none; padding:8px 14px;
+  border-radius:999px; font-size:.85rem; color:#7a3b4b; cursor:pointer;
+  transition: background .3s var(--ease-smooth), color .3s var(--ease-smooth);
+}
+.admin-tab.active{ background: var(--rose); color:#fff; }
+.admin-body{ padding: 18px 20px 30px; overflow-y:auto; }
+.admin-panel-section{ display:none; flex-direction:column; gap:14px; }
+.admin-panel-section.active{ display:flex; }
+.field{ display:flex; flex-direction:column; gap:6px; font-size:.85rem; color:#5c2634; font-weight:600; }
+.field input[type=text], .field input[type=number], .field textarea, .field select, .field input[type=date]{
+  font-family: var(--font-body); font-weight:500; font-size:.95rem;
+  padding:10px 12px; border-radius:10px; border:1.5px solid rgba(125,31,54,.2);
+  background:#fff; color: var(--ink);
+}
+.field textarea{ min-height:72px; resize:vertical; }
+.field input[type=color]{ width:56px; height:36px; border:none; background:none; padding:0; }
+.switch-field{ flex-direction:row; align-items:center; justify-content:space-between; }
+.switch-field input{ width:20px; height:20px; }
+.admin-save{ align-self:flex-start; margin-top:4px; }
+.admin-hint{ font-size:.82rem; color:#7a3b4b; line-height:1.5; }
+.admin-error{ color:#b3273f; font-size:.85rem; }
+.btn-download-website{
+  width:100%; font-size:1.02rem; padding:16px 20px;
+  box-shadow: var(--shadow-deep);
+}
+.btn-download-website:disabled{ opacity:.6; cursor:default; transform:none; }
+.admin-divider{ height:1px; background: rgba(125,31,54,.14); margin: 6px 0; }
+
+.dynamic-list{ display:flex; flex-direction:column; gap:12px; }
+.dyn-item{
+  background:#fff; border:1px solid rgba(125,31,54,.14); border-radius:14px;
+  padding:12px; display:flex; flex-direction:column; gap:8px;
+}
+.dyn-item-row{ display:flex; gap:8px; align-items:center; }
+.dyn-item-row input[type=text], .dyn-item-row input[type=number], .dyn-item-row input[type=date]{
+  flex:1; padding:8px 10px; border-radius:8px; border:1px solid rgba(125,31,54,.2); font-size:.88rem;
+}
+.dyn-item textarea{ font-size:.85rem; padding:8px; border-radius:8px; border:1px solid rgba(125,31,54,.2); min-height:50px; }
+.dyn-item-thumb{ width:52px; height:52px; border-radius:10px; object-fit:cover; background: var(--blush); flex-shrink:0; }
+.dyn-item-actions{ display:flex; gap:8px; margin-top:4px; }
+.dyn-mini-btn{
+  background: rgba(125,31,54,.08); border:none; padding:6px 10px; border-radius:8px;
+  font-size:.78rem; color: var(--deep-red); cursor:pointer;
+}
+.dyn-mini-btn.danger{ background: rgba(179,39,63,.12); color:#b3273f; }
+.dyn-order-handle{ cursor:grab; color:#7a3b4b; font-size:.9rem; }
+.color-swatch-row{ display:flex; gap:6px; }
+.color-swatch{ width:22px; height:22px; border-radius:50%; border:2px solid transparent; cursor:pointer; }
+.color-swatch.selected{ border-color: var(--deep-red); }
+
+.confirm-overlay{
+  position:fixed; inset:0; z-index:300; background: rgba(58,20,32,.55);
+  display:flex; align-items:center; justify-content:center; padding:20px;
+}
+.confirm-box{ background:#fff; border-radius:16px; padding:22px; max-width:320px; width:100%; text-align:center; box-shadow: var(--shadow-deep); }
+.confirm-actions{ display:flex; gap:10px; justify-content:center; margin-top:16px; }
+
+/* ---------- reduced motion ---------- */
+@media (prefers-reduced-motion: reduce){
+  *{ animation-duration: .001ms !important; animation-iteration-count:1 !important; transition-duration: .001ms !important; }
+}
+body.low-motion *{ animation-duration: .001ms !important; }
+
+/* ---------- responsive ---------- */
+@media (min-width: 720px){
+  .opening-title{ font-size:3.8rem; }
+  .balloon-field{ height:50vh; }
+}
+@media (max-width: 360px){
+  .date-input{ min-width:180px; padding:14px 16px; font-size:1.05rem; }
+  .memory-card{ width: 72vw; }
+  .final-scroll-viewport{ height: 50vh; }
+}
+
+</style>
+</head>
+<body>
+
+<!-- Ambient background layer, shared across steps -->
+<div class="ambient" id="ambient" aria-hidden="true">
+  <div class="glow glow-a"></div>
+  <div class="glow glow-b"></div>
+  <canvas id="petalCanvas"></canvas>
+  <div class="sparkles" id="sparkles"></div>
+</div>
+
+<!-- Tap-anywhere tiny heart burst layer (non-blocking) -->
+<div class="heart-burst-layer" id="heartBurstLayer" aria-hidden="true"></div>
+
+<!-- Background music (hidden native element, controlled via JS) -->
+<audio id="bgMusic" loop preload="none"></audio>
+
+<!-- Sound toggles -->
+<button id="soundToggle" class="sound-toggle" aria-label="Toggle sound effects" title="Toggle sound effects">🔊</button>
+<button id="musicToggle" class="sound-toggle music-toggle" aria-label="Toggle background music" title="Toggle background music">🎵</button>
+
+<!-- Progress dots -->
+<div class="progress-rail" id="progressRail" aria-hidden="true">
+  <span class="dot" data-step="1"></span>
+  <span class="dot" data-step="2"></span>
+  <span class="dot" data-step="3"></span>
+  <span class="dot" data-step="4"></span>
+  <span class="dot" data-step="5"></span>
+</div>
+
+<main id="app">
+
+  <!-- STEP 1 — OPENING -->
+  <section class="screen active" id="screen-opening" data-step="1">
+    <div class="screen-inner opening-inner">
+      <p class="eyebrow-soft" id="openingSubtitle">for someone I adore</p>
+      <h1 class="opening-title" id="openingTitle">Hey you...</h1>
+      <p class="opening-text" id="openingText">I made something special for you.</p>
+      <button class="btn btn-primary btn-glow" id="startBtn">Start <span class="btn-arrow">→</span></button>
+    </div>
+  </section>
+
+  <!-- STEP 1.5 — ENVELOPE -->
+  <section class="screen" id="screen-envelope" data-step="1">
+    <div class="screen-inner envelope-inner">
+      <div class="envelope" id="envelope">
+        <div class="envelope-back"></div>
+        <div class="letter" id="letterPaper">
+          <p id="envelopeMessage">Every year I get to celebrate you, and every year I fall more in love with who you are. Today is all about you.</p>
+        </div>
+        <div class="envelope-flap"></div>
+        <div class="envelope-front"></div>
+        <div class="envelope-seal" id="envelopeSeal">♥</div>
+      </div>
+      <p class="tap-hint" id="tapHint">tap the envelope</p>
+
+      <div class="choice-row hidden" id="choiceRow">
+        <p class="choice-question">Do you want to keep going?</p>
+        <div class="choice-buttons">
+          <button class="btn btn-primary" id="yesBtn">Yes ❤️</button>
+          <button class="btn btn-ghost" id="noBtn">No</button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- STEP 2 — BALLOONS -->
+  <section class="screen" id="screen-balloons" data-step="2">
+    <div class="screen-inner balloons-inner">
+      <h2 class="step-title">Pop a balloon 🎈</h2>
+      <p class="step-sub">each one is hiding something for you</p>
+      <div class="teddy teddy-left" aria-hidden="true">🧸</div>
+      <div class="teddy teddy-right" aria-hidden="true">🧸</div>
+      <div class="balloon-field" id="balloonField"></div>
+      <div class="balloon-modal-backdrop hidden" id="balloonModalBackdrop"></div>
+      <div class="balloon-message-card hidden" id="balloonMessageCard" aria-live="polite" role="dialog">
+        <p class="balloon-message" id="balloonMessage"></p>
+        <button class="btn btn-primary btn-small balloon-message-close" id="balloonMessageClose">Continue</button>
+      </div>
+      <button class="btn btn-primary btn-continue hidden" id="balloonContinueBtn">Continue →</button>
+    </div>
+  </section>
+
+  <!-- STEP 3 — CAKE -->
+  <section class="screen" id="screen-cake" data-step="3">
+    <div class="screen-inner cake-inner">
+      <h2 class="step-title" id="cakeHeading">Happy Birthday 🎂</h2>
+      <p class="step-sub" id="cakeSub">tap the cake for a bite</p>
+      <div class="cake-stage">
+        <div class="teddy teddy-cake-left" aria-hidden="true">🧸</div>
+        <div class="teddy teddy-cake-right" aria-hidden="true">🧸</div>
+        <div class="cake-wrap" id="cakeWrap">
+          <svg id="cakeSvg" viewBox="0 0 320 300" class="cake-svg"></svg>
+          <div class="crumbs" id="crumbLayer"></div>
+        </div>
+      </div>
+      <p class="cake-progress" id="cakeProgress"></p>
+    </div>
+  </section>
+
+  <!-- STEP 4a — PASSWORD -->
+  <section class="screen" id="screen-password" data-step="4">
+    <div class="screen-inner password-inner">
+      <h2 class="step-title">A Little Birthday Secret 🎂</h2>
+      <p class="step-sub" id="passwordClue">Do you remember the date when we first met? ❤️</p>
+      <div class="date-picker-wrap" id="datePickerWrap">
+        <input type="date" id="secretDateInput" class="date-input" aria-label="Select the date">
+      </div>
+      <p class="pin-error hidden" id="pinError">That's not quite the date — try again 🤍</p>
+      <button class="btn btn-primary" id="unlockBtn">Unlock</button>
+    </div>
+  </section>
+
+  <!-- STEP 4b — MEMORY TIMELINE -->
+  <section class="screen" id="screen-memories" data-step="4">
+    <div class="screen-inner memories-inner">
+      <h2 class="step-title">Do you remember these moments?</h2>
+      <div class="memory-viewer" id="memoryViewer">
+        <button class="mem-nav mem-prev" id="memPrev" aria-label="Previous memory">‹</button>
+        <div class="memory-card" id="memoryCard">
+          <div class="memory-photo-frame">
+            <img id="memoryPhoto" class="memory-photo" alt="">
+            <div class="memory-photo-fallback" id="memoryPhotoFallback">♥</div>
+          </div>
+          <div class="memory-date" id="memoryDate"></div>
+          <div class="memory-title" id="memoryTitle"></div>
+          <div class="memory-desc" id="memoryDesc"></div>
+          <div class="memory-caption" id="memoryCaption"></div>
+        </div>
+        <button class="mem-nav mem-next" id="memNext" aria-label="Next memory">›</button>
+      </div>
+      <div class="memory-controls">
+        <span class="memory-index" id="memoryIndex">1 / 1</span>
+        <button class="btn btn-tiny" id="autoplayToggle">▶ Autoplay</button>
+      </div>
+      <div class="timeline-dots" id="timelineDots"></div>
+      <button class="btn btn-primary btn-continue" id="memoriesContinueBtn">Continue →</button>
+    </div>
+  </section>
+
+  <!-- STEP 5 — FINAL LETTER -->
+  <section class="screen" id="screen-final" data-step="5">
+    <div class="screen-inner final-inner">
+      <div class="teddy teddy-final" aria-hidden="true">🧸</div>
+      <h2 class="final-title" id="finalTitle">One Last Thing...</h2>
+      <div class="final-scroll-viewport" id="finalScrollViewport">
+        <div class="final-scroll-track" id="finalScrollTrack">
+          <div class="final-letter" id="finalLetter"></div>
+          <p class="final-signoff" id="finalSignoff">Happy Birthday, always yours. 🤍</p>
+        </div>
+      </div>
+      <button class="btn btn-ghost btn-restart" id="restartBtn">Replay ↺</button>
+    </div>
+  </section>
+
+</main>
+
+<!-- ADMIN DOT -->
+<button id="adminDot" class="admin-dot" aria-label="Admin settings" title="•"></button>
+
+<!-- ADMIN PANEL -->
+<div class="admin-overlay hidden" id="adminOverlay">
+  <div class="admin-panel">
+    <div class="admin-header">
+      <h2>Admin Panel</h2>
+      <button class="admin-close" id="adminClose" aria-label="Close admin panel">✕</button>
+    </div>
+    <div class="admin-tabs" id="adminTabs">
+      <button class="admin-tab active" data-tab="general">General</button>
+      <button class="admin-tab" data-tab="opening">Opening</button>
+      <button class="admin-tab" data-tab="balloons">Balloons</button>
+      <button class="admin-tab" data-tab="cake">Cake</button>
+      <button class="admin-tab" data-tab="memories">Memories</button>
+      <button class="admin-tab" data-tab="final">Final</button>
+      <button class="admin-tab" data-tab="music">Music</button>
+      <button class="admin-tab" data-tab="security">Security</button>
+      <button class="admin-tab" data-tab="backup">Backup</button>
+    </div>
+
+    <div class="admin-body">
+
+      <!-- GENERAL -->
+      <div class="admin-panel-section active" id="tab-general">
+        <label class="field">Website title
+          <input type="text" id="cfg-title">
+        </label>
+        <label class="field">Birthday person's name
+          <input type="text" id="cfg-personName">
+        </label>
+        <label class="field">Main greeting
+          <input type="text" id="cfg-greeting">
+        </label>
+        <label class="field switch-field">
+          <span>Sound on by default</span>
+          <input type="checkbox" id="cfg-soundOn">
+        </label>
+        <label class="field switch-field">
+          <span>Reduce animation intensity</span>
+          <input type="checkbox" id="cfg-lowMotion">
+        </label>
+        <label class="field switch-field">
+          <span>Background petals / sparkles</span>
+          <input type="checkbox" id="cfg-bgEffects">
+        </label>
+        <label class="field">Accent color
+          <input type="color" id="cfg-accent">
+        </label>
+        <button class="btn btn-primary admin-save" data-save="general">Save General Settings</button>
+      </div>
+
+      <!-- OPENING / STEP1 -->
+      <div class="admin-panel-section" id="tab-opening">
+        <label class="field">Opening subtitle (small text above title)
+          <input type="text" id="cfg-openingSubtitle">
+        </label>
+        <label class="field">Opening title
+          <input type="text" id="cfg-openingTitle">
+        </label>
+        <label class="field">Opening text
+          <textarea id="cfg-openingText"></textarea>
+        </label>
+        <label class="field">Envelope letter message
+          <textarea id="cfg-envelopeMessage"></textarea>
+        </label>
+        <label class="field">YES button text
+          <input type="text" id="cfg-yesText">
+        </label>
+        <label class="field">NO button text
+          <input type="text" id="cfg-noText">
+        </label>
+        <button class="btn btn-primary admin-save" data-save="opening">Save Opening Settings</button>
+      </div>
+
+      <!-- BALLOONS -->
+      <div class="admin-panel-section" id="tab-balloons">
+        <label class="field switch-field">
+          <span>Show teddy bears</span>
+          <input type="checkbox" id="cfg-teddyVisible">
+        </label>
+        <label class="field">Balloon size — <span id="balloonSizeReadout">100%</span>
+          <input type="range" id="cfg-balloonSize" min="60" max="160" step="5">
+        </label>
+        <div id="balloonList" class="dynamic-list"></div>
+        <div class="dyn-item-actions balloon-bulk-actions">
+          <button class="btn btn-ghost" id="addBalloonBtn">+ Add Balloon</button>
+          <button class="btn btn-ghost btn-danger-outline" id="removeAllBalloonsBtn">Remove All Balloons</button>
+        </div>
+        <button class="btn btn-primary admin-save" data-save="balloons">Save Balloon Settings</button>
+      </div>
+
+      <!-- CAKE -->
+      <div class="admin-panel-section" id="tab-cake">
+        <label class="field">Birthday heading
+          <input type="text" id="cfg-cakeHeading">
+        </label>
+        <label class="field">Cake section subtext
+          <input type="text" id="cfg-cakeSub">
+        </label>
+        <p class="admin-hint">The eating animation is a natural fixed sequence — each tap cuts and serves away one quarter of the cake, candles included, until it's gone. This keeps it looking realistic rather than random.</p>
+        <label class="field">Celebration text (shown when finished)
+          <input type="text" id="cfg-cakeCelebration">
+        </label>
+        <button class="btn btn-primary admin-save" data-save="cake">Save Cake Settings</button>
+      </div>
+
+      <!-- MEMORIES -->
+      <div class="admin-panel-section" id="tab-memories">
+        <label class="field">Sort mode
+          <select id="cfg-sortMode">
+            <option value="date">Sort by date</option>
+            <option value="manual">Manual order</option>
+          </select>
+        </label>
+        <label class="field">Slideshow interval (seconds)
+          <input type="number" id="cfg-slideshowInterval" min="2" max="30">
+        </label>
+        <div id="memoryList" class="dynamic-list"></div>
+        <button class="btn btn-ghost" id="addMemoryBtn">+ Add Memory</button>
+        <button class="btn btn-primary admin-save" data-save="memories">Save Memory Settings</button>
+      </div>
+
+      <!-- FINAL LETTER -->
+      <div class="admin-panel-section" id="tab-final">
+        <label class="field">Final section title
+          <input type="text" id="cfg-finalTitle">
+        </label>
+        <label class="field">Final letter (one paragraph per line)
+          <textarea id="cfg-finalLetterText" rows="7"></textarea>
+        </label>
+        <label class="field">Ending / sign-off line
+          <input type="text" id="cfg-finalSignoff">
+        </label>
+        <label class="field">Scroll speed (lower = faster; roughly seconds to scroll one screenful)
+          <input type="number" id="cfg-finalScrollSpeed" min="15" max="120">
+        </label>
+        <p class="admin-hint">The letter scrolls on its own, but can always be dragged/swiped up or down manually — it resumes auto-scrolling a moment after you let go.</p>
+        <label class="field">Text size
+          <select id="cfg-finalTextSize">
+            <option value="small">Small</option>
+            <option value="medium">Medium</option>
+            <option value="large">Large</option>
+          </select>
+        </label>
+        <button class="btn btn-primary admin-save" data-save="final">Save Final Letter</button>
+      </div>
+
+      <!-- MUSIC -->
+      <div class="admin-panel-section" id="tab-music">
+        <label class="field switch-field">
+          <span>Enable background music</span>
+          <input type="checkbox" id="cfg-musicEnabled">
+        </label>
+        <label class="field switch-field">
+          <span>Autoplay after first tap (browsers block silent autoplay)</span>
+          <input type="checkbox" id="cfg-musicAutoplay">
+        </label>
+        <label class="field">Song file (upload to replace)
+          <input type="file" id="musicFileInput" accept="audio/*">
+        </label>
+        <p class="admin-hint" id="musicCurrentInfo">No song uploaded yet.</p>
+        <button class="btn btn-ghost" id="removeMusicBtn">Remove Song</button>
+        <label class="field">Volume
+          <input type="range" id="cfg-musicVolume" min="0" max="100">
+        </label>
+        <button class="btn btn-primary admin-save" data-save="music">Save Music Settings</button>
+      </div>
+
+      <!-- SECURITY -->
+      <div class="admin-panel-section" id="tab-security">
+        <p class="admin-hint">A guest must pick this exact date to unlock the Memory Timeline. It's never shown on the live site.</p>
+        <label class="field">Secret date (the answer)
+          <input type="date" id="cfg-secretDate">
+        </label>
+        <label class="field">Question shown to guest
+          <input type="text" id="cfg-passwordClue">
+        </label>
+        <p class="admin-error hidden" id="securityError"></p>
+        <button class="btn btn-primary admin-save" id="savePasswordBtn">Save Secret Date</button>
+      </div>
+
+      <!-- BACKUP -->
+      <div class="admin-panel-section" id="tab-backup">
+        <p class="admin-hint">This downloads the complete website — your text, photos, memories, music and settings all baked into one <code>.html</code> file. Open it anywhere, or send it to someone else, and it works on its own — no other files needed.</p>
+        <button class="btn btn-primary btn-download-website" id="downloadWebsiteBtn">💾 Save &amp; Download Website</button>
+        <p class="admin-hint" id="downloadWebsiteStatus"></p>
+
+        <div class="admin-divider"></div>
+
+        <p class="admin-hint">Advanced: a settings-only backup file (no rebuilt webpage — just the raw data, for your own records or to move settings between two copies of the project).</p>
+        <button class="btn btn-ghost" id="exportBtn">Export settings (.json)</button>
+        <label class="field">Import settings (.json)
+          <input type="file" id="importInput" accept="application/json">
+        </label>
+        <button class="btn btn-ghost" id="resetBtn">Reset Everything to Default</button>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<!-- confirm dialog -->
+<div class="confirm-overlay hidden" id="confirmOverlay">
+  <div class="confirm-box">
+    <p id="confirmText">Are you sure?</p>
+    <div class="confirm-actions">
+      <button class="btn btn-ghost" id="confirmCancel">Cancel</button>
+      <button class="btn btn-danger" id="confirmOk">Delete</button>
+    </div>
+  </div>
+</div>
+
+<script>
+/* ============================================================
+   BIRTHDAY WEBSITE — SCRIPT
+   Vanilla JS. No external libraries. localStorage for persistence.
+   ============================================================ */
+
+(function(){
+"use strict";
+
+/* ---------------------------------------------------------
+   0. DEFAULT CONFIG + STORAGE
+--------------------------------------------------------- */
+const STORAGE_KEY = "bdaySiteConfig_v1";
+
+function uid(){ return Math.random().toString(36).slice(2,9); }
+
+function defaultConfig(){
+  return /*##DEFAULT_CONFIG_START##*/{
+    general: {
+      title: "Happy Birthday",
+      personName: "",
+      greeting: "Hey you...",
+      soundOn: true,
+      lowMotion: false,
+      bgEffects: true,
+      accent: "#c7456b"
+    },
+    step1: {
+      openingSubtitle: "for someone I adore",
+      openingTitle: "Hey you...",
+      openingText: "I made something special for you.",
+      envelopeMessage: "Every year I get to celebrate you, and every year I fall more in love with who you are. Today is all about you.",
+      yesText: "Yes ❤️",
+      noText: "No"
+    },
+    teddyVisible: true,
+    balloonSize: 1,
+    balloons: [
+      { id: uid(), message: "You make ordinary days feel special.", color: "#c7456b" },
+      { id: uid(), message: "I love the way you laugh at your own jokes.", color: "#d3a25b" },
+      { id: uid(), message: "Every memory with you is one of my favorites.", color: "#7d1f36" },
+      { id: uid(), message: "You're my favorite person to talk to about nothing.", color: "#f3c6a4" },
+      { id: uid(), message: "Thank you for always showing up for me.", color: "#c7456b" },
+      { id: uid(), message: "I hope this year gives you everything you deserve.", color: "#d3a25b" }
+    ],
+    cake: {
+      heading: "Happy Birthday 🎂",
+      sub: "tap the cake for a bite",
+      celebration: "Yay! Make a wish 🎉"
+    },
+    sortMode: "date",
+    slideshowInterval: 5,
+    memories: [
+      { id: uid(), date: "2023-06-12", title: "The Day We Met", description: "A small moment that became one of my favorite memories.", caption: "where it all started", photo: "" },
+      { id: uid(), date: "2024-02-14", title: "Our First Trip", description: "Getting lost together turned out to be the best part.", caption: "", photo: "" },
+      { id: uid(), date: "2024-11-03", title: "That Rainy Evening", description: "We stayed in and it was perfect anyway.", caption: "quiet nights are my favorite", photo: "" }
+    ],
+    security: {
+      secretDate: "2023-06-12",
+      clue: "Do you remember the date when we first met? ❤️"
+    },
+    music: {
+      enabled: true,
+      autoplay: true,
+      volume: 0.6,
+      src: ""
+    },
+    final: {
+      title: "One Last Thing...",
+      letter: "If you're reading this, it means you made it through everything I put together for you — and that alone makes me smile.\nI wanted today to feel like a little pause, just for you, to remember how loved you are.\nHere's to another year of your laugh, your ideas, your randomness, and everything that makes you, you.\nHappy birthday. I hope it's as wonderful as you are.",
+      signoff: "Happy Birthday, always yours. 🤍",
+      scrollSpeed: 40,
+      textSize: "medium"
+    }
+  }/*##DEFAULT_CONFIG_END##*/;
+}
+
+function loadConfig(){
+  try{
+    const raw = localStorage.getItem(STORAGE_KEY);
+    if(!raw) return defaultConfig();
+    const parsed = JSON.parse(raw);
+    // shallow-merge with defaults so new fields introduced later don't break old saves
+    const def = defaultConfig();
+
+    // legacy migration: old 4-digit "password" -> no direct date equivalent, so
+    // fall back to the default secret date rather than guessing.
+    const security = Object.assign({}, def.security, parsed.security);
+    if(parsed.security && parsed.security.password && !parsed.security.secretDate){
+      security.secretDate = def.security.secretDate;
+    }
+
+    // legacy migration: old flat finalLetter string -> final.letter
+    let final = Object.assign({}, def.final, parsed.final);
+    if(!parsed.final && typeof parsed.finalLetter === "string"){
+      final = Object.assign({}, def.final, { letter: parsed.finalLetter });
+    }
+
+    return Object.assign({}, def, parsed, {
+      general: Object.assign({}, def.general, parsed.general),
+      step1: Object.assign({}, def.step1, parsed.step1),
+      cake: Object.assign({}, def.cake, parsed.cake),
+      security: security,
+      music: Object.assign({}, def.music, parsed.music),
+      final: final,
+      balloons: Array.isArray(parsed.balloons) ? parsed.balloons : def.balloons,
+      memories: Array.isArray(parsed.memories) ? parsed.memories : def.memories
+    });
+  }catch(e){
+    console.warn("Config load failed, using defaults.", e);
+    return defaultConfig();
+  }
+}
+
+let CONFIG = loadConfig();
+
+function saveConfig(){
+  try{
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(CONFIG));
+    return true;
+  }catch(e){
+    console.error("Save failed (storage may be full):", e);
+    alert("Couldn't save — your browser storage might be full. Try using smaller photos.");
+    return false;
+  }
+}
+
+/* ---------------------------------------------------------
+   1. SOUND MANAGER (WebAudio oscillator based — no asset files needed)
+--------------------------------------------------------- */
+const Sound = (function(){
+  let ctx = null;
+  let enabled = CONFIG.general.soundOn !== false;
+
+  function ensureCtx(){
+    if(!ctx){
+      try{ ctx = new (window.AudioContext || window.webkitAudioContext)(); }
+      catch(e){ ctx = null; }
+    }
+    if(ctx && ctx.state === "suspended") ctx.resume();
+    return ctx;
+  }
+
+  function tone(freq, dur, type, gainStart, delay){
+    if(!enabled) return;
+    const c = ensureCtx();
+    if(!c) return;
+    const osc = c.createOscillator();
+    const gain = c.createGain();
+    osc.type = type || "sine";
+    osc.frequency.value = freq;
+    const t0 = c.currentTime + (delay||0);
+    gain.gain.setValueAtTime(gainStart||0.15, t0);
+    gain.gain.exponentialRampToValueAtTime(0.001, t0 + dur);
+    osc.connect(gain); gain.connect(c.destination);
+    osc.start(t0); osc.stop(t0 + dur + 0.05);
+  }
+
+  return {
+    setEnabled(v){ enabled = v; },
+    isEnabled(){ return enabled; },
+    click(){ tone(520, .08, "sine", .1); },
+    pop(){ tone(700, .12, "triangle", .18); tone(300, .1, "sine", .08, .05); },
+    munch(){ tone(180 + Math.random()*60, .09, "square", .06); },
+    unlock(){ tone(440,.12,"sine",.15); tone(660,.14,"sine",.15,.12); tone(880,.18,"sine",.15,.24); },
+    celebrate(){
+      [523,659,784,1047].forEach((f,i)=> tone(f,.22,"triangle",.13, i*0.09));
+    },
+    wrong(){ tone(200,.2,"sawtooth",.12); }
+  };
+})();
+
+/* ---------------------------------------------------------
+   2. AMBIENT BACKGROUND — falling petals (canvas) + sparkles
+--------------------------------------------------------- */
+const Ambient = (function(){
+  const canvas = document.getElementById("petalCanvas");
+  const ctx = canvas.getContext("2d");
+  let petals = [];
+  let running = false;
+  let raf = null;
+
+  function resize(){
+    canvas.width = window.innerWidth * devicePixelRatio;
+    canvas.height = window.innerHeight * devicePixelRatio;
+    canvas.style.width = window.innerWidth + "px";
+    canvas.style.height = window.innerHeight + "px";
+    ctx.setTransform(devicePixelRatio,0,0,devicePixelRatio,0,0);
+  }
+
+  const petalHues = ["#c7456b", "#f3c6a4", "#d3a25b", "#e58aa0"];
+  function makePetal(){
+    return {
+      x: Math.random()*window.innerWidth,
+      y: -20 - Math.random()*320,
+      size: 5 + Math.random()*9,
+      speedY: 0.35 + Math.random()*0.75,
+      speedX: (Math.random()-0.5)*0.7,
+      rot: Math.random()*Math.PI*2,
+      rotSpeed: (Math.random()-0.5)*0.025,
+      sway: Math.random()*2*Math.PI,
+      hue: petalHues[Math.floor(Math.random()*petalHues.length)]
+    };
+  }
+
+  function drawPetal(p){
+    ctx.save();
+    ctx.translate(p.x, p.y);
+    ctx.rotate(p.rot);
+    ctx.fillStyle = p.hue;
+    ctx.globalAlpha = 0.55;
+    ctx.beginPath();
+    ctx.ellipse(0,0,p.size,p.size*0.6,0,0,Math.PI*2);
+    ctx.fill();
+    ctx.restore();
+  }
+
+  function tick(){
+    if(!running) return;
+    ctx.clearRect(0,0,window.innerWidth,window.innerHeight);
+    petals.forEach(p=>{
+      p.sway += 0.02;
+      p.y += p.speedY;
+      p.x += p.speedX + Math.sin(p.sway)*0.4;
+      p.rot += p.rotSpeed;
+      if(p.y > window.innerHeight + 20){
+        Object.assign(p, makePetal(), { y: -20 });
+      }
+      drawPetal(p);
+    });
+    raf = requestAnimationFrame(tick);
+  }
+
+  function start(count){
+    stop();
+    petals = Array.from({length: count}, makePetal);
+    running = true;
+    tick();
+  }
+  function stop(){
+    running = false;
+    if(raf) cancelAnimationFrame(raf);
+    ctx.clearRect(0,0,window.innerWidth,window.innerHeight);
+  }
+
+  function buildSparkles(count){
+    const holder = document.getElementById("sparkles");
+    holder.innerHTML = "";
+    for(let i=0;i<count;i++){
+      const s = document.createElement("div");
+      s.className = "sparkle";
+      s.style.left = Math.random()*100 + "%";
+      s.style.top = Math.random()*100 + "%";
+      s.style.animationDelay = (Math.random()*2.6) + "s";
+      holder.appendChild(s);
+    }
+  }
+
+  window.addEventListener("resize", resize);
+  resize();
+
+  return {
+    apply(){
+      const on = CONFIG.general.bgEffects !== false;
+      const lowMotion = CONFIG.general.lowMotion === true || window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+      const isSmallScreen = window.innerWidth < 480;
+      const petalCount = isSmallScreen ? 34 : 48;
+      const sparkleCount = isSmallScreen ? 16 : 22;
+      if(on && !lowMotion){
+        start(petalCount);
+        buildSparkles(sparkleCount);
+      } else if(on && lowMotion){
+        stop();
+        buildSparkles(Math.round(sparkleCount * 0.6));
+      } else {
+        stop();
+        document.getElementById("sparkles").innerHTML = "";
+      }
+    }
+  };
+})();
+
+/* ---------------------------------------------------------
+   2b. TAP-ANYWHERE TINY HEART BURST
+--------------------------------------------------------- */
+const HeartBurst = (function(){
+  const layer = document.getElementById("heartBurstLayer");
+  const MAX_NODES = 140;
+
+  function spawn(x, y){
+    if(layer.children.length > MAX_NODES){
+      // trim oldest to keep DOM light if bursts overlap heavily
+      for(let i=0;i<10 && layer.firstChild;i++) layer.removeChild(layer.firstChild);
+    }
+    const count = 6 + Math.floor(Math.random()*4); // 6-9 tiny hearts per tap
+    for(let i=0;i<count;i++){
+      const h = document.createElement("span");
+      h.className = "mini-heart";
+      h.textContent = "♥";
+      const angle = (Math.PI * 2 * i) / count + (Math.random()-0.5)*0.6;
+      const dist = 20 + Math.random()*26;
+      const dx = Math.cos(angle) * dist;
+      const dy = Math.sin(angle) * dist - 6; // slight upward bias
+      const size = 6 + Math.random()*7;
+      const rot = (Math.random()*60 - 30);
+      h.style.left = x + "px";
+      h.style.top = y + "px";
+      h.style.fontSize = size + "px";
+      h.style.color = Math.random() > 0.5 ? "#c7456b" : "#d3a25b";
+      h.style.setProperty("--dx", dx + "px");
+      h.style.setProperty("--dy", dy + "px");
+      h.style.setProperty("--rot", rot + "deg");
+      layer.appendChild(h);
+      setTimeout(()=> h.remove(), 1000);
+    }
+  }
+
+  return { spawn };
+})();
+
+/* ---------------------------------------------------------
+   2c. BACKGROUND MUSIC — one continuous soundtrack site-wide
+--------------------------------------------------------- */
+const Music = (function(){
+  const audio = document.getElementById("bgMusic");
+  const toggleBtn = document.getElementById("musicToggle");
+  let autoStartAttempted = false;
+
+  function updateIcon(){
+    const hasSong = !!(CONFIG.music && CONFIG.music.src);
+    const active = hasSong && CONFIG.music.enabled && !audio.paused;
+    toggleBtn.textContent = active ? "🎵" : "🔇";
+    toggleBtn.classList.toggle("is-muted", !active);
+  }
+
+  function applyConfig(){
+    const m = CONFIG.music || {};
+    if(m.src){
+      if(audio.getAttribute("src") !== m.src) audio.src = m.src;
+    } else {
+      audio.removeAttribute("src");
+    }
+    audio.volume = typeof m.volume === "number" ? m.volume : 0.6;
+    if(!m.enabled || !m.src){
+      audio.pause();
+      autoStartAttempted = false;
+    }
+    updateIcon();
+  }
+
+  function tryAutoStart(){
+    const m = CONFIG.music || {};
+    if(autoStartAttempted || !m.enabled || !m.src || m.autoplay === false) return;
+    autoStartAttempted = true;
+    const p = audio.play();
+    if(p && p.catch) p.catch(()=>{ autoStartAttempted = false; }); // browser blocked it — user can still use the toggle
+    setTimeout(updateIcon, 80);
+  }
+
+  function toggle(){
+    const m = CONFIG.music || {};
+    if(!m.enabled || !m.src) return;
+    if(audio.paused){
+      const p = audio.play();
+      if(p && p.catch) p.catch(()=>{});
+    } else {
+      audio.pause();
+    }
+    setTimeout(updateIcon, 60);
+  }
+
+  audio.addEventListener("play", updateIcon);
+  audio.addEventListener("pause", updateIcon);
+  toggleBtn.addEventListener("click", toggle);
+
+  return { applyConfig, tryAutoStart, toggle, updateIcon };
+})();
+
+// One shared listener: spawns the tiny heart burst on every tap, and — on the
+// very first meaningful interaction — attempts to start background music
+// (browsers block audio autoplay until the user has interacted with the page).
+document.addEventListener("pointerdown", (e)=>{
+  Music.tryAutoStart();
+  if(e.target.closest && e.target.closest("#adminOverlay, #confirmOverlay")) return;
+  HeartBurst.spawn(e.clientX, e.clientY);
+}, { passive: true });
+
+/* ---------------------------------------------------------
+   3. SCREEN NAVIGATION
+--------------------------------------------------------- */
+const screens = {
+  opening: document.getElementById("screen-opening"),
+  envelope: document.getElementById("screen-envelope"),
+  balloons: document.getElementById("screen-balloons"),
+  cake: document.getElementById("screen-cake"),
+  password: document.getElementById("screen-password"),
+  memories: document.getElementById("screen-memories"),
+  final: document.getElementById("screen-final")
+};
+const stepOrderForDots = ["opening","balloons","cake","password","final"]; // envelope shares dot 1, memories shares dot 4
+
+function goTo(name){
+  Object.values(screens).forEach(s => s.classList.remove("active"));
+  screens[name].classList.add("active");
+  window.scrollTo({top:0, behavior:"instant" in window ? "instant" : "auto"});
+  updateProgress(screens[name].dataset.step);
+}
+
+function updateProgress(stepNum){
+  document.querySelectorAll(".progress-rail .dot").forEach(d=>{
+    const n = parseInt(d.dataset.step,10);
+    d.classList.toggle("done", n < parseInt(stepNum,10));
+    d.classList.toggle("now", n === parseInt(stepNum,10));
+  });
+}
+
+/* ---------------------------------------------------------
+   4. APPLY CONFIG TO DOM (text content)
+--------------------------------------------------------- */
+function applyTextConfig(){
+  document.title = CONFIG.general.title || "Happy Birthday";
+  document.getElementById("openingSubtitle").textContent = CONFIG.step1.openingSubtitle;
+  document.getElementById("openingTitle").textContent = CONFIG.step1.openingTitle;
+  document.getElementById("openingText").textContent = CONFIG.step1.openingText;
+  document.getElementById("envelopeMessage").textContent = CONFIG.step1.envelopeMessage;
+  document.getElementById("yesBtn").textContent = CONFIG.step1.yesText;
+  document.getElementById("noBtn").textContent = CONFIG.step1.noText;
+
+  document.getElementById("cakeHeading").textContent = CONFIG.cake.heading;
+  document.getElementById("cakeSub").textContent = CONFIG.cake.sub;
+
+  document.getElementById("passwordClue").textContent = CONFIG.security.clue;
+
+  document.querySelectorAll(".teddy").forEach(t=>{
+    t.style.display = CONFIG.teddyVisible === false ? "none" : "";
+  });
+
+  document.documentElement.style.setProperty("--accent", CONFIG.general.accent || "#c7456b");
+  document.body.classList.toggle("low-motion", CONFIG.general.lowMotion === true);
+
+  renderFinalLetter();
+  Sound.setEnabled(CONFIG.general.soundOn !== false);
+  document.getElementById("soundToggle").textContent = Sound.isEnabled() ? "🔊" : "🔇";
+  Ambient.apply();
+  Music.applyConfig();
+}
+
+const finalTextSizeMap = { small: "1.05rem", medium: "1.3rem", large: "1.55rem" };
+
+function renderFinalLetter(){
+  const holder = document.getElementById("finalLetter");
+  holder.innerHTML = "";
+  const f = CONFIG.final || {};
+  const paragraphs = (f.letter || "").split("\n").filter(Boolean);
+  paragraphs.forEach((p)=>{
+    const el = document.createElement("p");
+    el.textContent = p;
+    holder.appendChild(el);
+  });
+  document.getElementById("finalTitle").textContent = f.title || "";
+  document.getElementById("finalSignoff").textContent = f.signoff || "";
+  document.getElementById("finalScrollViewport").style.setProperty(
+    "--final-text-size", finalTextSizeMap[f.textSize] || finalTextSizeMap.medium
+  );
+}
+
+/* Cinematic slow auto-scroll for the final letter, built on the browser's
+   own native scrolling (not a CSS/transform animation) so it:
+   - always actually scrolls, however long the admin-edited letter is
+   - can be grabbed and scrolled up/down manually at any time (touch swipe,
+     mouse wheel, trackpad, scrollbar drag) — it's a real scrollable box
+   - automatically resumes auto-scrolling a moment after you let go */
+let finalScrollRAF = null;
+let finalScrollLastTs = null;
+let finalScrollResumeAt = 0;
+let finalScrollPxPerSec = 26;
+
+function startFinalScroll(){
+  const viewport = document.getElementById("finalScrollViewport");
+  stopFinalScroll();
+  viewport.scrollTop = 0;
+
+  const speedSetting = Math.max(15, Math.min(120, (CONFIG.final && CONFIG.final.scrollSpeed) || 40));
+  // admin's "scroll speed" is seconds to scroll roughly one screenful — turn
+  // that into a steady pixels/second rate, so total time scales naturally
+  // with however long the letter actually is.
+  finalScrollPxPerSec = Math.max(8, (viewport.clientHeight || 300) / speedSetting);
+
+  const reduceMotion = CONFIG.general.lowMotion === true || window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  if(reduceMotion) return; // fully manual scrolling, no forced auto-advance
+
+  finalScrollLastTs = null;
+  finalScrollResumeAt = 0;
+  finalScrollRAF = requestAnimationFrame(finalScrollTick);
+}
+
+function stopFinalScroll(){
+  if(finalScrollRAF) cancelAnimationFrame(finalScrollRAF);
+  finalScrollRAF = null;
+}
+
+function finalScrollTick(ts){
+  if(!screens.final.classList.contains("active")){ stopFinalScroll(); return; }
+  const viewport = document.getElementById("finalScrollViewport");
+  if(finalScrollLastTs === null) finalScrollLastTs = ts;
+  const dt = (ts - finalScrollLastTs) / 1000;
+  finalScrollLastTs = ts;
+
+  if(performance.now() >= finalScrollResumeAt){
+    const maxScroll = viewport.scrollHeight - viewport.clientHeight;
+    if(maxScroll > 0 && viewport.scrollTop < maxScroll){
+      viewport.scrollTop = Math.min(maxScroll, viewport.scrollTop + finalScrollPxPerSec * dt);
+    }
+  }
+  finalScrollRAF = requestAnimationFrame(finalScrollTick);
+}
+
+// any manual touch/wheel/drag pauses the auto-advance briefly, then it
+// picks back up on its own from wherever the reader left it
+function pauseFinalAutoScroll(){
+  finalScrollResumeAt = performance.now() + 1800;
+}
+(function(){
+  const viewport = document.getElementById("finalScrollViewport");
+  ["wheel","touchstart","pointerdown"].forEach(evt=>{
+    viewport.addEventListener(evt, pauseFinalAutoScroll, { passive:true });
+  });
+})();
+
+
+/* ---------------------------------------------------------
+   5. STEP 1 — OPENING + ENVELOPE
+--------------------------------------------------------- */
+document.getElementById("startBtn").addEventListener("click", ()=>{
+  Sound.click();
+  goTo("envelope");
+});
+
+const envelope = document.getElementById("envelope");
+const choiceRow = document.getElementById("choiceRow");
+const tapHint = document.getElementById("tapHint");
+
+envelope.addEventListener("click", ()=>{
+  if(envelope.classList.contains("open")) return;
+  envelope.classList.add("open");
+  Sound.click();
+  tapHint.classList.add("hidden");
+  setTimeout(()=> spawnEnvelopeSparkles(), 250);
+  setTimeout(()=>{ choiceRow.classList.remove("hidden"); }, 2650);
+});
+
+/* soft sparkle/heart particles that drift up around the envelope as it opens */
+function spawnEnvelopeSparkles(){
+  const rect = envelope.getBoundingClientRect();
+  const cx = rect.left + rect.width/2;
+  const cy = rect.top + rect.height*0.35;
+  const glyphs = ["✦","♥","✧","❀"];
+  const count = 10;
+  for(let i=0;i<count;i++){
+    const bit = document.createElement("span");
+    bit.className = "decor-bit";
+    bit.textContent = glyphs[i % glyphs.length];
+    const angle = Math.PI + (Math.random()-0.5) * Math.PI * 0.9; // fan upward
+    const dist = 40 + Math.random()*70;
+    const dx = Math.cos(angle) * dist * 0.5;
+    const dy = -Math.abs(Math.sin(angle) * dist) - 20;
+    bit.style.left = (cx + (Math.random()-0.5)*rect.width*0.6) + "px";
+    bit.style.top = cy + "px";
+    bit.style.fontSize = (9 + Math.random()*8) + "px";
+    bit.style.color = ["#d3a25b","#c7456b","#f3c6a4"][i % 3];
+    bit.style.setProperty("--dx", dx + "px");
+    bit.style.setProperty("--dy", dy + "px");
+    bit.style.setProperty("--rot", (Math.random()*40 - 20) + "deg");
+    bit.style.animationDuration = (1.3 + Math.random()*0.5) + "s";
+    bit.style.animationDelay = (Math.random()*0.5) + "s";
+    document.getElementById("heartBurstLayer").appendChild(bit);
+    setTimeout(()=> bit.remove(), 2200);
+  }
+}
+
+document.getElementById("yesBtn").addEventListener("click", ()=>{
+  Sound.pop();
+  goTo("balloons");
+  initBalloons();
+});
+
+const noBtn = document.getElementById("noBtn");
+let noDodgeCount = 0;
+noBtn.addEventListener("click", (e)=>{
+  e.preventDefault();
+  noDodgeCount = Math.min(noDodgeCount + 1, 6);
+  const row = choiceRow.getBoundingClientRect();
+  const maxX = Math.max(40, row.width - 90);
+  const randX = (Math.random() - 0.5) * maxX;
+  const randY = (Math.random() - 0.5) * 30 - noDodgeCount * 2;
+  const scale = Math.max(0.45, 1 - noDodgeCount * 0.1);
+  noBtn.style.transform = `translate(${randX}px, ${randY}px) scale(${scale})`;
+  noBtn.style.position = "relative";
+  Sound.click();
+});
+
+/* ---------------------------------------------------------
+   6. STEP 2 — BALLOONS
+--------------------------------------------------------- */
+const balloonField = document.getElementById("balloonField");
+const balloonMessageEl = document.getElementById("balloonMessage");
+const balloonMessageCard = document.getElementById("balloonMessageCard");
+const balloonModalBackdrop = document.getElementById("balloonModalBackdrop");
+const balloonMessageClose = document.getElementById("balloonMessageClose");
+const balloonContinueBtn = document.getElementById("balloonContinueBtn");
+let balloonsPopped = 0;
+let balloonMessageQueue = [];
+let balloonAllPoppedPending = false;
+
+function balloonSVG(color){
+  return `<svg viewBox="0 0 78 96" xmlns="http://www.w3.org/2000/svg">
+    <ellipse cx="39" cy="38" rx="34" ry="38" fill="${color}"/>
+    <ellipse cx="27" cy="24" rx="9" ry="12" fill="rgba(255,255,255,0.28)"/>
+    <polygon points="33,74 45,74 39,86" fill="${color}"/>
+    <line x1="39" y1="86" x2="39" y2="96" stroke="#8a8a8a" stroke-width="1.2"/>
+  </svg>`;
+}
+
+function layoutPositions(count, w, h, bw, bh){
+  // simple responsive grid-ish scatter, centered, avoiding edges
+  const cols = count <= 4 ? 2 : 3;
+  const rows = Math.ceil(count / cols);
+  const cellW = w / cols, cellH = h / rows;
+  const pos = [];
+  for(let i=0;i<count;i++){
+    const col = i % cols, row = Math.floor(i / cols);
+    const jitterX = (Math.random()-0.5) * cellW * 0.28;
+    const jitterY = (Math.random()-0.5) * cellH * 0.28;
+    pos.push({
+      x: col*cellW + cellW/2 + jitterX - bw/2,
+      y: row*cellH + cellH/2 + jitterY - bh/2
+    });
+  }
+  return pos;
+}
+
+function initBalloons(){
+  balloonField.innerHTML = "";
+  balloonMessageEl.textContent = "";
+  closeBalloonModal(true);
+  balloonContinueBtn.classList.add("hidden");
+  balloonsPopped = 0;
+  balloonAllPoppedPending = false;
+  // messages appear in the order configured in the Admin Panel, based on
+  // pop count — not tied to which physical balloon was tapped.
+  balloonMessageQueue = CONFIG.balloons.map(b => b.message);
+
+  const scale = Math.max(0.6, Math.min(1.6, CONFIG.balloonSize || 1));
+  balloonField.style.setProperty("--balloon-scale", scale);
+
+  // no balloons configured at all — nothing to pop, so just let the guest
+  // straight through to Continue instead of leaving them stuck
+  if(CONFIG.balloons.length === 0){
+    balloonContinueBtn.classList.remove("hidden");
+    return;
+  }
+
+  const bw = 78 * scale, bh = 96 * scale;
+  const rect = balloonField.getBoundingClientRect();
+  const w = rect.width || 320, h = rect.height || 340;
+  const positions = layoutPositions(CONFIG.balloons.length, w, h, bw, bh);
+
+  CONFIG.balloons.forEach((b, i)=>{
+    const el = document.createElement("div");
+    el.className = "balloon";
+    el.style.left = Math.max(4, Math.min(w - bw - 4, positions[i].x)) + "px";
+    el.style.top = Math.max(4, Math.min(h - bh - 4, positions[i].y)) + "px";
+    el.style.animationDelay = (i * 0.3) + "s";
+    el.innerHTML = balloonSVG(b.color || "#c7456b");
+    el.dataset.id = b.id;
+    el.addEventListener("click", ()=> popBalloon(el, b));
+    balloonField.appendChild(el);
+  });
+}
+
+function popBalloon(el, data){
+  if(el.classList.contains("popped")) return;
+  el.classList.add("popped");
+  Sound.pop();
+  spawnParticles(el);
+
+  const message = balloonMessageQueue[balloonsPopped] !== undefined
+    ? balloonMessageQueue[balloonsPopped]
+    : data.message;
+  balloonsPopped++;
+  balloonAllPoppedPending = balloonsPopped >= CONFIG.balloons.length;
+
+  openBalloonModal(message);
+}
+
+// Shows the message as a proper modal popup — it stays on screen (and the
+// backdrop blocks tapping other balloons) until the guest explicitly
+// dismisses it via the Continue button or by tapping the backdrop.
+function openBalloonModal(message){
+  balloonMessageEl.textContent = message;
+  balloonMessageCard.classList.remove("hidden");
+  balloonModalBackdrop.classList.remove("hidden");
+  void balloonMessageCard.offsetWidth; // force reflow so the show transition plays
+  balloonMessageCard.classList.add("show");
+  balloonModalBackdrop.classList.add("show");
+  spawnCelebrationDecor(balloonMessageCard);
+}
+
+function closeBalloonModal(instant){
+  balloonMessageCard.classList.remove("show");
+  balloonModalBackdrop.classList.remove("show");
+  const finish = ()=>{
+    balloonMessageCard.classList.add("hidden");
+    balloonModalBackdrop.classList.add("hidden");
+    if(balloonAllPoppedPending){
+      balloonAllPoppedPending = false;
+      balloonContinueBtn.classList.remove("hidden");
+    }
+  };
+  if(instant){ finish(); } else { setTimeout(finish, 450); }
+}
+
+balloonMessageClose.addEventListener("click", ()=>{ Sound.click(); closeBalloonModal(false); });
+balloonModalBackdrop.addEventListener("click", ()=> closeBalloonModal(false));
+
+/* small ring of hearts / petals / sparkles around the message popup */
+function spawnCelebrationDecor(cardEl){
+  const rect = cardEl.getBoundingClientRect();
+  const cx = rect.left + rect.width/2;
+  const cy = rect.top + rect.height/2;
+  const glyphs = ["♥","✦","❀","✧","♥"];
+  const count = 10;
+  for(let i=0;i<count;i++){
+    const bit = document.createElement("span");
+    bit.className = "decor-bit";
+    bit.textContent = glyphs[i % glyphs.length];
+    const angle = (Math.PI * 2 * i) / count + Math.random()*0.4;
+    const dist = rect.width/2 + 18 + Math.random()*24;
+    const dx = Math.cos(angle) * dist;
+    const dy = Math.sin(angle) * dist * 0.6 - 10;
+    bit.style.left = cx + "px";
+    bit.style.top = cy + "px";
+    bit.style.fontSize = (10 + Math.random()*8) + "px";
+    bit.style.color = ["#c7456b","#d3a25b","#f3c6a4"][i % 3];
+    bit.style.setProperty("--dx", dx + "px");
+    bit.style.setProperty("--dy", dy + "px");
+    bit.style.setProperty("--rot", (Math.random()*50 - 25) + "deg");
+    document.getElementById("heartBurstLayer").appendChild(bit);
+    setTimeout(()=> bit.remove(), 1200);
+  }
+}
+
+function spawnParticles(el){
+  const rect = el.getBoundingClientRect();
+  for(let i=0;i<10;i++){
+    const p = document.createElement("div");
+    p.className = "confetti-piece";
+    p.style.left = (rect.left + rect.width/2) + "px";
+    p.style.background = ["#c7456b","#d3a25b","#f3c6a4","#7d1f36"][i%4];
+    p.style.top = (rect.top + rect.height/2) + "px";
+    const dur = 0.7 + Math.random()*0.5;
+    p.style.animationDuration = dur + "s";
+    p.style.transform = `translate(${(Math.random()-0.5)*120}px, ${(Math.random())*80}px)`;
+    document.body.appendChild(p);
+    setTimeout(()=> p.remove(), dur*1000 + 50);
+  }
+}
+
+document.getElementById("balloonContinueBtn").addEventListener("click", ()=>{
+  Sound.click();
+  goTo("cake");
+  initCake();
+});
+
+/* ---------------------------------------------------------
+   7. STEP 3 — CAKE
+--------------------------------------------------------- */
+const cakeSvg = document.getElementById("cakeSvg");
+const crumbLayer = document.getElementById("crumbLayer");
+const cakeProgressEl = document.getElementById("cakeProgress");
+let cakeBiteCount = 0;
+const CAKE_TOTAL_TAPS = 4; // exactly 4 taps — one quarter of the cake served away per tap
+
+// Predetermined, non-overlapping quarter-slices — never based on where the
+// user taps. Each tap serves away exactly one NEW quarter, cut in from the
+// same side; every slice that's already gone stays gone permanently and is
+// never redrawn, so nothing ever flashes back into view.
+const CAKE_CUT_SLICES = [
+  { x: 212, w: 108 }, // tap 1 — rightmost quarter, out to the edge
+  { x: 159, w: 53  }, // tap 2 — next quarter to the left
+  { x: 106, w: 53  }  // tap 3 — next quarter to the left
+  // tap 4 finishes the cake entirely (handled as a full fade-out below)
+];
+const CAKE_CUT_Y = 58;
+const CAKE_CUT_H = 230;
+
+// the 3 candles (left/center/right) blow out in sync with the slice that
+// held them being served away, instead of floating over empty air
+const CAKE_CANDLE_X = [110, 160, 210];
+const CAKE_CANDLE_HIDE_AT_STAGE = [2, 1, 0]; // left survives longest, right goes first
+
+function buildCakeMarkup(){
+  return `
+  <defs>
+    <mask id="biteMask">
+      <rect x="0" y="0" width="320" height="300" fill="white"/>
+      <g id="biteHoles"></g>
+    </mask>
+  </defs>
+  <g id="cakeBody" mask="url(#biteMask)">
+    <ellipse cx="160" cy="262" rx="120" ry="16" fill="#7d1f36" opacity="0.18"/>
+    <rect x="55" y="150" width="210" height="95" rx="14" fill="#f3c6a4"/>
+    <rect x="55" y="150" width="210" height="18" rx="9" fill="#ffffff" opacity="0.55"/>
+    <rect x="80" y="80" width="160" height="80" rx="14" fill="#c7456b"/>
+    <rect x="80" y="80" width="160" height="16" rx="8" fill="#ffffff" opacity="0.5"/>
+    <path d="M75,150 Q90,135 105,150 Q120,135 135,150 Q150,135 165,150 Q180,135 195,150 Q210,135 225,150 Q240,135 250,150 L250,160 L75,160 Z" fill="#ffffff" opacity="0.8"/>
+    <path d="M78,80 Q93,65 108,80 Q123,65 138,80 Q153,65 168,80 Q183,65 198,80 Q213,65 228,80 L228,90 L78,90 Z" fill="#ffffff" opacity="0.7"/>
+    <circle cx="110" cy="115" r="4" fill="#d3a25b"/>
+    <circle cx="160" cy="105" r="4" fill="#fdf5ee"/>
+    <circle cx="205" cy="118" r="4" fill="#d3a25b"/>
+    <circle cx="130" cy="190" r="4" fill="#7d1f36"/>
+    <circle cx="190" cy="195" r="4" fill="#fdf5ee"/>
+  </g>
+  <g id="candles">
+    ${CAKE_CANDLE_X.map((cx,i)=>`
+      <g class="candle" id="candle-${i}">
+        <rect x="${cx-3}" y="52" width="6" height="30" rx="2" fill="#fdf5ee" stroke="#d3a25b" stroke-width="1"/>
+        <g class="flame" style="animation-delay:${i*0.15}s">
+          <path d="M${cx},32 C${cx+7},42 ${cx+5},52 ${cx},52 C${cx-5},52 ${cx-7},42 ${cx},32 Z" fill="#f3a13a"/>
+          <path d="M${cx},40 C${cx+3},46 ${cx+2},51 ${cx},51 C${cx-2},51 ${cx-3},46 ${cx},40 Z" fill="#ffe08a"/>
+        </g>
+      </g>
+    `).join("")}
+  </g>`;
+}
+
+function initCake(){
+  cakeBiteCount = 0;
+  cakeSvg.innerHTML = buildCakeMarkup();
+  cakeSvg.style.transition = "none";
+  cakeSvg.style.opacity = "1";
+  cakeSvg.style.transform = "none";
+  requestAnimationFrame(()=>{ cakeSvg.style.transition = ""; });
+  crumbLayer.innerHTML = "";
+  updateCakeProgress();
+
+  cakeSvg.onclick = handleCakeTap;
+}
+
+function updateCakeProgress(){
+  if(cakeBiteCount === 0) cakeProgressEl.textContent = CONFIG.cake.sub || "tap the cake for a bite";
+  else if(cakeBiteCount === 1) cakeProgressEl.textContent = "a quarter served — tap for more";
+  else if(cakeBiteCount === 2) cakeProgressEl.textContent = "halfway gone — tap again";
+  else if(cakeBiteCount === 3) cakeProgressEl.textContent = "three quarters gone — one more tap";
+  else cakeProgressEl.textContent = CONFIG.cake.celebration;
+}
+
+// svg-space coordinate -> real screen coordinate, for placing crumbs/slice
+// flourishes naturally at the predetermined cut spot (never at the finger).
+function svgToScreen(svgX, svgY){
+  const rect = cakeSvg.getBoundingClientRect();
+  return {
+    x: rect.left + (svgX / 320) * rect.width,
+    y: rect.top + (svgY / 300) * rect.height
+  };
+}
+
+function handleCakeTap(){
+  if(cakeBiteCount >= CAKE_TOTAL_TAPS) return;
+  const stageIndex = cakeBiteCount; // 0 on first tap, 1 on second, 2 on third
+  cakeBiteCount++;
+
+  if(stageIndex < CAKE_CUT_SLICES.length){
+    const cut = CAKE_CUT_SLICES[stageIndex];
+    applyCutStage(cut);
+    hideCandlesForStage(stageIndex);
+    const anchor = svgToScreen(cut.x + cut.w * 0.4, CAKE_CUT_Y + CAKE_CUT_H * 0.55);
+    spawnCrumbs(anchor.x, anchor.y, 9);
+    Sound.munch();
+  }
+
+  updateCakeProgress();
+
+  if(cakeBiteCount >= CAKE_TOTAL_TAPS){
+    Sound.celebrate();
+    setTimeout(()=>{
+      const anchor = svgToScreen(120, 150);
+      spawnCrumbs(anchor.x, anchor.y, 14);
+      cakeSvg.style.transition = "opacity .9s var(--ease-smooth), transform .9s var(--ease-smooth)";
+      cakeSvg.style.opacity = "0";
+      cakeSvg.style.transform = "scale(.85) translateY(10px)";
+      burstConfettiCenter();
+    }, 300);
+    setTimeout(()=>{
+      goTo("password");
+      resetDateInput();
+    }, 1600);
+  }
+}
+
+// Adds ONE new permanent slice-cut for this tap only — instantly, no grow-in
+// or slide animation. Slices already served away from earlier taps are
+// never touched, removed, or redrawn — so they never flash back into view.
+function applyCutStage(cut){
+  const holes = document.getElementById("biteHoles");
+  const el = document.createElementNS("http://www.w3.org/2000/svg","rect");
+  el.setAttribute("x", cut.x);
+  el.setAttribute("y", CAKE_CUT_Y);
+  el.setAttribute("width", cut.w);
+  el.setAttribute("height", CAKE_CUT_H);
+  el.setAttribute("rx", 8);
+  el.setAttribute("fill", "black");
+  el.setAttribute("class", "bite-mark");
+  holes.appendChild(el);
+}
+
+// candles blow out together with the quarter that held them — instantly,
+// no fade/slide, so none are left floating oddly over cake that's gone
+function hideCandlesForStage(stageIndex){
+  CAKE_CANDLE_HIDE_AT_STAGE.forEach((hideAt, i)=>{
+    if(stageIndex >= hideAt){
+      const c = document.getElementById("candle-" + i);
+      if(c) c.style.display = "none";
+    }
+  });
+}
+
+function spawnCrumbs(clientX, clientY, count){
+  const wrapRect = crumbLayer.getBoundingClientRect();
+  for(let i=0;i<(count||7);i++){
+    const cr = document.createElement("div");
+    cr.className = "crumb";
+    cr.style.left = (clientX - wrapRect.left + (Math.random()-0.5)*20) + "px";
+    cr.style.top = (clientY - wrapRect.top + (Math.random()-0.5)*20) + "px";
+    cr.style.background = Math.random() > 0.5 ? "#d3a25b" : "#c7456b";
+    cr.style.animationDelay = (Math.random()*0.12) + "s";
+    crumbLayer.appendChild(cr);
+    setTimeout(()=> cr.remove(), 950);
+  }
+}
+
+function burstConfettiCenter(){
+  const cx = window.innerWidth/2, cy = window.innerHeight/2;
+  for(let i=0;i<26;i++){
+    const p = document.createElement("div");
+    p.className = "confetti-piece";
+    p.style.left = cx + "px";
+    p.style.top = cy + "px";
+    p.style.background = ["#c7456b","#d3a25b","#f3c6a4","#7d1f36","#fdf5ee"][i%5];
+    const dur = 1 + Math.random()*0.8;
+    p.style.animationDuration = dur + "s";
+    p.style.transform = `translate(${(Math.random()-0.5)*window.innerWidth*0.8}px, ${Math.random()*200}px)`;
+    document.body.appendChild(p);
+    setTimeout(()=>p.remove(), dur*1000+80);
+  }
+}
+
+/* ---------------------------------------------------------
+   8. STEP 4a — PASSWORD
+--------------------------------------------------------- */
+const secretDateInput = document.getElementById("secretDateInput");
+const datePickerWrap = document.getElementById("datePickerWrap");
+const pinError = document.getElementById("pinError");
+
+function resetDateInput(){
+  secretDateInput.value = "";
+  pinError.classList.add("hidden");
+  datePickerWrap.classList.remove("shake");
+}
+
+document.getElementById("unlockBtn").addEventListener("click", tryUnlockDate);
+// also try immediately when a date is picked — friendlier on mobile, where
+// the native date wheel already confirms the choice on close
+secretDateInput.addEventListener("change", ()=>{
+  if(secretDateInput.value) tryUnlockDate();
+});
+
+function tryUnlockDate(){
+  const entered = secretDateInput.value; // "YYYY-MM-DD" from the native date input
+  if(!entered) return;
+  if(entered === (CONFIG.security.secretDate || "")){
+    Sound.unlock();
+    goTo("memories");
+    initMemories();
+  } else {
+    Sound.wrong();
+    pinError.classList.remove("hidden");
+    datePickerWrap.classList.add("shake");
+    setTimeout(()=>{ datePickerWrap.classList.remove("shake"); }, 500);
+  }
+}
+
+/* ---------------------------------------------------------
+   9. STEP 4b — MEMORY TIMELINE
+--------------------------------------------------------- */
+let memIndex = 0;
+let sortedMemories = [];
+let autoplayTimer = null;
+let autoplayOn = false;
+let isMemAnimating = false;
+
+function getSortedMemories(){
+  const arr = CONFIG.memories.slice();
+  if(CONFIG.sortMode === "date"){
+    arr.sort((a,b)=> new Date(a.date) - new Date(b.date));
+  }
+  return arr;
+}
+
+function formatDate(iso){
+  if(!iso) return "";
+  const d = new Date(iso + "T00:00:00");
+  if(isNaN(d)) return iso;
+  return d.toLocaleDateString(undefined, { day:"numeric", month:"long", year:"numeric" });
+}
+
+function initMemories(){
+  sortedMemories = getSortedMemories();
+  memIndex = 0;
+  isMemAnimating = false;
+  renderTimelineDots();
+  renderMemoryContent(sortedMemories[memIndex]);
+  updateMemoryMeta();
+  stopAutoplay();
+}
+
+function renderTimelineDots(){
+  const holder = document.getElementById("timelineDots");
+  holder.innerHTML = "";
+  sortedMemories.forEach((m,i)=>{
+    const d = document.createElement("span");
+    d.className = "tdot" + (i===memIndex ? " active" : "");
+    d.addEventListener("click", ()=>{
+      if(i === memIndex) return;
+      goToMemory(i, i > memIndex ? "next" : "prev");
+      pauseAutoplayBriefly();
+    });
+    holder.appendChild(d);
+  });
+}
+
+// fills in the card's content only (no animation) — used for the initial
+// render and as the mid-transition content swap
+function renderMemoryContent(m){
+  if(!m) return;
+  document.getElementById("memoryDate").textContent = formatDate(m.date);
+  document.getElementById("memoryTitle").textContent = m.title || "";
+  document.getElementById("memoryDesc").textContent = m.description || "";
+  document.getElementById("memoryCaption").textContent = m.caption || "";
+
+  const img = document.getElementById("memoryPhoto");
+  const fallback = document.getElementById("memoryPhotoFallback");
+  if(m.photo){
+    img.src = m.photo;
+    img.style.display = "block";
+    fallback.style.display = "none";
+    img.onerror = ()=>{ img.style.display="none"; fallback.style.display="flex"; };
+  } else {
+    img.style.display = "none";
+    fallback.style.display = "flex";
+  }
+}
+
+// updates the index label + dots to match the current memIndex
+function updateMemoryMeta(){
+  document.getElementById("memoryIndex").textContent = `${memIndex+1} / ${sortedMemories.length}`;
+  document.querySelectorAll(".tdot").forEach((d,i)=> d.classList.toggle("active", i===memIndex));
+}
+
+// slow, smooth, cinematic slide+fade between memories — new content enters
+// from the appropriate side rather than swapping instantly
+function goToMemory(newIndex, direction){
+  if(!sortedMemories.length || isMemAnimating || newIndex === memIndex) return;
+  memIndex = newIndex;
+  const card = document.getElementById("memoryCard");
+
+  if(direction){
+    isMemAnimating = true;
+    card.classList.remove("mc-enter-next","mc-enter-prev");
+    card.classList.add(direction === "next" ? "mc-enter-next" : "mc-enter-prev");
+    renderMemoryContent(sortedMemories[memIndex]);
+    updateMemoryMeta();
+    void card.offsetWidth; // force reflow so the entrance transition plays
+    requestAnimationFrame(()=>{
+      requestAnimationFrame(()=>{
+        card.classList.remove("mc-enter-next","mc-enter-prev");
+      });
+    });
+    setTimeout(()=>{ isMemAnimating = false; }, 1000);
+  } else {
+    renderMemoryContent(sortedMemories[memIndex]);
+    updateMemoryMeta();
+  }
+}
+
+function stepMemory(dir){
+  if(!sortedMemories.length) return;
+  const newIndex = (memIndex + dir + sortedMemories.length) % sortedMemories.length;
+  goToMemory(newIndex, dir > 0 ? "next" : "prev");
+}
+
+document.getElementById("memPrev").addEventListener("click", ()=>{ stepMemory(-1); pauseAutoplayBriefly(); });
+document.getElementById("memNext").addEventListener("click", ()=>{ stepMemory(1); pauseAutoplayBriefly(); });
+
+// keyboard arrows (desktop) — only when memories screen active
+document.addEventListener("keydown", (e)=>{
+  if(!screens.memories.classList.contains("active")) return;
+  if(e.key === "ArrowLeft"){ stepMemory(-1); pauseAutoplayBriefly(); }
+  if(e.key === "ArrowRight"){ stepMemory(1); pauseAutoplayBriefly(); }
+});
+
+// touch swipe
+(function(){
+  let startX = null;
+  const viewer = document.getElementById("memoryViewer");
+  viewer.addEventListener("touchstart", (e)=>{ startX = e.touches[0].clientX; }, {passive:true});
+  viewer.addEventListener("touchend", (e)=>{
+    if(startX === null) return;
+    const dx = e.changedTouches[0].clientX - startX;
+    if(Math.abs(dx) > 40){ stepMemory(dx < 0 ? 1 : -1); pauseAutoplayBriefly(); }
+    startX = null;
+  });
+})();
+
+function startAutoplay(){
+  stopAutoplay();
+  autoplayOn = true;
+  document.getElementById("autoplayToggle").textContent = "⏸ Autoplay";
+  const secs = Math.max(2, Math.min(30, CONFIG.slideshowInterval || 5));
+  autoplayTimer = setInterval(()=> stepMemory(1), secs*1000);
+}
+function stopAutoplay(){
+  autoplayOn = false;
+  document.getElementById("autoplayToggle").textContent = "▶ Autoplay";
+  if(autoplayTimer) clearInterval(autoplayTimer);
+  autoplayTimer = null;
+}
+function pauseAutoplayBriefly(){
+  if(autoplayOn){ stopAutoplay(); }
+}
+document.getElementById("autoplayToggle").addEventListener("click", ()=>{
+  autoplayOn ? stopAutoplay() : startAutoplay();
+});
+
+document.getElementById("memoriesContinueBtn").addEventListener("click", ()=>{
+  stopAutoplay();
+  Sound.click();
+  goTo("final");
+  startFinalScroll();
+});
+
+/* ---------------------------------------------------------
+   10. STEP 5 — FINAL + RESTART
+--------------------------------------------------------- */
+document.getElementById("restartBtn").addEventListener("click", ()=>{
+  stopFinalScroll();
+  goTo("opening");
+  const env = document.getElementById("envelope");
+  env.classList.remove("open");
+  choiceRow.classList.add("hidden");
+  tapHint.classList.remove("hidden");
+  noBtn.style.transform = "";
+  noDodgeCount = 0;
+  resetDateInput();
+});
+
+/* ---------------------------------------------------------
+   11. SOUND TOGGLE (global)
+--------------------------------------------------------- */
+document.getElementById("soundToggle").addEventListener("click", ()=>{
+  const now = !Sound.isEnabled();
+  Sound.setEnabled(now);
+  CONFIG.general.soundOn = now;
+  document.getElementById("soundToggle").textContent = now ? "🔊" : "🔇";
+  saveConfig();
+});
+
+/* ============================================================
+   12. ADMIN PANEL
+============================================================ */
+const adminOverlay = document.getElementById("adminOverlay");
+document.getElementById("adminDot").addEventListener("click", openAdmin);
+document.getElementById("adminClose").addEventListener("click", closeAdmin);
+
+function openAdmin(){
+  populateAdminFields();
+  renderBalloonAdminList();
+  renderMemoryAdminList();
+  adminOverlay.classList.remove("hidden");
+}
+function closeAdmin(){ adminOverlay.classList.add("hidden"); }
+
+// tabs
+document.getElementById("adminTabs").addEventListener("click", (e)=>{
+  const btn = e.target.closest(".admin-tab");
+  if(!btn) return;
+  document.querySelectorAll(".admin-tab").forEach(t=>t.classList.remove("active"));
+  btn.classList.add("active");
+  document.querySelectorAll(".admin-panel-section").forEach(s=>s.classList.remove("active"));
+  document.getElementById("tab-" + btn.dataset.tab).classList.add("active");
+});
+
+function populateAdminFields(){
+  const g = CONFIG.general;
+  document.getElementById("cfg-title").value = g.title;
+  document.getElementById("cfg-personName").value = g.personName;
+  document.getElementById("cfg-greeting").value = g.greeting;
+  document.getElementById("cfg-soundOn").checked = g.soundOn !== false;
+  document.getElementById("cfg-lowMotion").checked = g.lowMotion === true;
+  document.getElementById("cfg-bgEffects").checked = g.bgEffects !== false;
+  document.getElementById("cfg-accent").value = g.accent || "#c7456b";
+
+  const s1 = CONFIG.step1;
+  document.getElementById("cfg-openingSubtitle").value = s1.openingSubtitle;
+  document.getElementById("cfg-openingTitle").value = s1.openingTitle;
+  document.getElementById("cfg-openingText").value = s1.openingText;
+  document.getElementById("cfg-envelopeMessage").value = s1.envelopeMessage;
+  document.getElementById("cfg-yesText").value = s1.yesText;
+  document.getElementById("cfg-noText").value = s1.noText;
+
+  document.getElementById("cfg-teddyVisible").checked = CONFIG.teddyVisible !== false;
+  const bSizePct = Math.round((CONFIG.balloonSize || 1) * 100);
+  document.getElementById("cfg-balloonSize").value = bSizePct;
+  document.getElementById("balloonSizeReadout").textContent = bSizePct + "%";
+
+  const c = CONFIG.cake;
+  document.getElementById("cfg-cakeHeading").value = c.heading;
+  document.getElementById("cfg-cakeSub").value = c.sub;
+  document.getElementById("cfg-cakeCelebration").value = c.celebration;
+
+  document.getElementById("cfg-sortMode").value = CONFIG.sortMode || "date";
+  document.getElementById("cfg-slideshowInterval").value = CONFIG.slideshowInterval || 5;
+
+  const f = CONFIG.final;
+  document.getElementById("cfg-finalTitle").value = f.title;
+  document.getElementById("cfg-finalLetterText").value = f.letter;
+  document.getElementById("cfg-finalSignoff").value = f.signoff;
+  document.getElementById("cfg-finalScrollSpeed").value = f.scrollSpeed;
+  document.getElementById("cfg-finalTextSize").value = f.textSize || "medium";
+
+  const mu = CONFIG.music;
+  document.getElementById("cfg-musicEnabled").checked = mu.enabled === true;
+  document.getElementById("cfg-musicAutoplay").checked = mu.autoplay !== false;
+  document.getElementById("cfg-musicVolume").value = Math.round((typeof mu.volume === "number" ? mu.volume : 0.6) * 100);
+  updateMusicInfo();
+
+  document.getElementById("cfg-secretDate").value = CONFIG.security.secretDate || "";
+  document.getElementById("cfg-passwordClue").value = CONFIG.security.clue;
+  document.getElementById("securityError").classList.add("hidden");
+}
+
+function updateMusicInfo(){
+  const info = document.getElementById("musicCurrentInfo");
+  info.textContent = CONFIG.music.src
+    ? "A song is set as the background track. Upload another file to replace it, or remove it below."
+    : "No song uploaded yet.";
+}
+
+function applyGeneralTabToConfig(){
+  CONFIG.general.title = val("cfg-title");
+  CONFIG.general.personName = val("cfg-personName");
+  CONFIG.general.greeting = val("cfg-greeting");
+  CONFIG.general.soundOn = document.getElementById("cfg-soundOn").checked;
+  CONFIG.general.lowMotion = document.getElementById("cfg-lowMotion").checked;
+  CONFIG.general.bgEffects = document.getElementById("cfg-bgEffects").checked;
+  CONFIG.general.accent = val("cfg-accent");
+}
+document.querySelector('[data-save="general"]').addEventListener("click", ()=>{
+  applyGeneralTabToConfig();
+  saveConfig();
+  applyTextConfig();
+  toast("General settings saved");
+});
+
+function applyOpeningTabToConfig(){
+  CONFIG.step1.openingSubtitle = val("cfg-openingSubtitle");
+  CONFIG.step1.openingTitle = val("cfg-openingTitle");
+  CONFIG.step1.openingText = val("cfg-openingText");
+  CONFIG.step1.envelopeMessage = val("cfg-envelopeMessage");
+  CONFIG.step1.yesText = val("cfg-yesText");
+  CONFIG.step1.noText = val("cfg-noText");
+}
+
+document.querySelector('[data-save="opening"]').addEventListener("click", ()=>{
+  applyOpeningTabToConfig();
+  saveConfig();
+  applyTextConfig();
+  toast("Opening settings saved");
+});
+
+function applyCakeTabToConfig(){
+  CONFIG.cake.heading = val("cfg-cakeHeading");
+  CONFIG.cake.sub = val("cfg-cakeSub");
+  CONFIG.cake.celebration = val("cfg-cakeCelebration");
+}
+document.querySelector('[data-save="cake"]').addEventListener("click", ()=>{
+  applyCakeTabToConfig();
+  saveConfig();
+  applyTextConfig();
+  toast("Cake settings saved");
+});
+
+function val(id){ return document.getElementById(id).value; }
+
+/* ---- balloon admin list ---- */
+const balloonColors = ["#c7456b","#d3a25b","#7d1f36","#f3c6a4","#8a3b53","#e8b979"];
+
+function renderBalloonAdminList(){
+  const holder = document.getElementById("balloonList");
+  holder.innerHTML = "";
+  if(CONFIG.balloons.length === 0){
+    const empty = document.createElement("p");
+    empty.className = "admin-hint";
+    empty.textContent = "No balloons — guests will skip straight to Continue. Press \"+ Add Balloon\" to bring some back.";
+    holder.appendChild(empty);
+  }
+  CONFIG.balloons.forEach((b, idx)=>{
+    const item = document.createElement("div");
+    item.className = "dyn-item";
+    item.innerHTML = `
+      <div class="dyn-item-row">
+        <span class="dyn-order-handle">🎈 ${idx+1}</span>
+        <input type="text" class="b-message" value="${escapeAttr(b.message)}" placeholder="Balloon message">
+      </div>
+      <div class="color-swatch-row">
+        ${balloonColors.map(c=>`<span class="color-swatch ${c===b.color?'selected':''}" data-color="${c}" style="background:${c}"></span>`).join("")}
+      </div>
+      <div class="dyn-item-actions">
+        <button class="dyn-mini-btn danger" data-action="delete">Delete Balloon</button>
+      </div>
+    `;
+    item.querySelector(".b-message").addEventListener("input", (e)=>{ b.message = e.target.value; });
+    item.querySelectorAll(".color-swatch").forEach(sw=>{
+      sw.addEventListener("click", ()=>{
+        b.color = sw.dataset.color;
+        item.querySelectorAll(".color-swatch").forEach(s=>s.classList.remove("selected"));
+        sw.classList.add("selected");
+      });
+    });
+    item.querySelector('[data-action="delete"]').addEventListener("click", ()=>{
+      confirmAction(`Delete this balloon message?`, ()=>{
+        CONFIG.balloons = CONFIG.balloons.filter(x=>x.id!==b.id);
+        renderBalloonAdminList();
+      });
+    });
+    holder.appendChild(item);
+  });
+}
+
+document.getElementById("addBalloonBtn").addEventListener("click", ()=>{
+  CONFIG.balloons.push({ id: uid(), message: "A new sweet message for you.", color: balloonColors[CONFIG.balloons.length % balloonColors.length] });
+  renderBalloonAdminList();
+});
+
+document.getElementById("removeAllBalloonsBtn").addEventListener("click", ()=>{
+  if(CONFIG.balloons.length === 0) return;
+  confirmAction("Remove all balloons? Guests will skip straight to Continue — you can add new ones any time.", ()=>{
+    CONFIG.balloons = [];
+    renderBalloonAdminList();
+  });
+});
+
+document.getElementById("cfg-balloonSize").addEventListener("input", (e)=>{
+  document.getElementById("balloonSizeReadout").textContent = e.target.value + "%";
+});
+
+function applyBalloonsTabToConfig(){
+  CONFIG.teddyVisible = document.getElementById("cfg-teddyVisible").checked;
+  CONFIG.balloonSize = Math.max(60, Math.min(160, parseInt(val("cfg-balloonSize"),10) || 100)) / 100;
+}
+document.querySelector('[data-save="balloons"]').addEventListener("click", ()=>{
+  applyBalloonsTabToConfig();
+  saveConfig();
+  applyTextConfig();
+  toast("Balloon settings saved");
+});
+
+/* ---- memory admin list ---- */
+function renderMemoryAdminList(){
+  const holder = document.getElementById("memoryList");
+  holder.innerHTML = "";
+  CONFIG.memories.forEach((m, idx)=>{
+    const item = document.createElement("div");
+    item.className = "dyn-item";
+    item.innerHTML = `
+      <div class="dyn-item-row">
+        <img class="dyn-item-thumb" src="${m.photo || ''}" alt="">
+        <input type="date" class="m-date" value="${m.date || ''}">
+      </div>
+      <input type="text" class="m-title" placeholder="Memory title" value="${escapeAttr(m.title)}">
+      <textarea class="m-desc" placeholder="Description">${escapeHtml(m.description)}</textarea>
+      <input type="text" class="m-caption" placeholder="Optional caption" value="${escapeAttr(m.caption)}">
+      <label class="field" style="font-size:.78rem;">Photo
+        <input type="file" class="m-photo" accept="image/png,image/jpeg,image/webp">
+      </label>
+      <p style="font-size:.72rem;color:#7a3b4b;">or path in memory/ folder:
+        <input type="text" class="m-photo-path" placeholder="memory/memory1.jpg" value="${(m.photo && !m.photo.startsWith('data:')) ? escapeAttr(m.photo) : ''}" style="width:60%;">
+      </p>
+      <div class="dyn-item-actions">
+        <button class="dyn-mini-btn" data-action="up">↑ Move Up</button>
+        <button class="dyn-mini-btn" data-action="down">↓ Move Down</button>
+        <button class="dyn-mini-btn danger" data-action="delete">Delete</button>
+      </div>
+    `;
+    item.querySelector(".m-date").addEventListener("change", e=> m.date = e.target.value);
+    item.querySelector(".m-title").addEventListener("input", e=> m.title = e.target.value);
+    item.querySelector(".m-desc").addEventListener("input", e=> m.description = e.target.value);
+    item.querySelector(".m-caption").addEventListener("input", e=> m.caption = e.target.value);
+    item.querySelector(".m-photo-path").addEventListener("input", e=>{
+      m.photo = e.target.value;
+      item.querySelector(".dyn-item-thumb").src = m.photo;
+    });
+    item.querySelector(".m-photo").addEventListener("change", (e)=>{
+      const file = e.target.files[0];
+      if(!file) return;
+      const reader = new FileReader();
+      reader.onload = ()=>{
+        m.photo = reader.result;
+        item.querySelector(".dyn-item-thumb").src = m.photo;
+        item.querySelector(".m-photo-path").value = "";
+      };
+      reader.readAsDataURL(file);
+    });
+    item.querySelector('[data-action="up"]').addEventListener("click", ()=>{
+      if(idx===0) return;
+      [CONFIG.memories[idx-1], CONFIG.memories[idx]] = [CONFIG.memories[idx], CONFIG.memories[idx-1]];
+      renderMemoryAdminList();
+    });
+    item.querySelector('[data-action="down"]').addEventListener("click", ()=>{
+      if(idx===CONFIG.memories.length-1) return;
+      [CONFIG.memories[idx+1], CONFIG.memories[idx]] = [CONFIG.memories[idx], CONFIG.memories[idx+1]];
+      renderMemoryAdminList();
+    });
+    item.querySelector('[data-action="delete"]').addEventListener("click", ()=>{
+      confirmAction(`Delete "${m.title || 'this memory'}"?`, ()=>{
+        CONFIG.memories = CONFIG.memories.filter(x=>x.id!==m.id);
+        renderMemoryAdminList();
+      });
+    });
+    holder.appendChild(item);
+  });
+}
+
+document.getElementById("addMemoryBtn").addEventListener("click", ()=>{
+  CONFIG.memories.push({ id: uid(), date: new Date().toISOString().slice(0,10), title:"New memory", description:"", caption:"", photo:"" });
+  renderMemoryAdminList();
+});
+
+function applyMemoriesTabToConfig(){
+  CONFIG.sortMode = val("cfg-sortMode");
+  CONFIG.slideshowInterval = Math.max(2, Math.min(30, parseInt(val("cfg-slideshowInterval"),10) || 5));
+}
+document.querySelector('[data-save="memories"]').addEventListener("click", ()=>{
+  applyMemoriesTabToConfig();
+  if(!saveConfig()) return;
+  toast("Memories saved");
+});
+
+/* ---- final letter ---- */
+function applyFinalTabToConfig(){
+  CONFIG.final.title = val("cfg-finalTitle");
+  CONFIG.final.letter = val("cfg-finalLetterText");
+  CONFIG.final.signoff = val("cfg-finalSignoff");
+  CONFIG.final.scrollSpeed = Math.max(15, Math.min(120, parseInt(val("cfg-finalScrollSpeed"),10) || 40));
+  CONFIG.final.textSize = val("cfg-finalTextSize");
+}
+document.querySelector('[data-save="final"]').addEventListener("click", ()=>{
+  applyFinalTabToConfig();
+  saveConfig();
+  applyTextConfig();
+  toast("Final letter saved");
+});
+
+/* ---- music ---- */
+document.getElementById("musicFileInput").addEventListener("change", (e)=>{
+  const file = e.target.files[0];
+  if(!file) return;
+  const reader = new FileReader();
+  reader.onload = ()=>{
+    CONFIG.music.src = reader.result;
+    CONFIG.music.enabled = true;
+    document.getElementById("cfg-musicEnabled").checked = true;
+    updateMusicInfo();
+    Music.applyConfig();
+    toast("Song loaded and turned on — press Save Music Settings to keep it");
+  };
+  reader.readAsDataURL(file);
+});
+
+document.getElementById("removeMusicBtn").addEventListener("click", ()=>{
+  confirmAction("Remove the current background song?", ()=>{
+    CONFIG.music.src = "";
+    document.getElementById("musicFileInput").value = "";
+    updateMusicInfo();
+    Music.applyConfig();
+  });
+});
+
+function applyMusicTabToConfig(){
+  CONFIG.music.enabled = document.getElementById("cfg-musicEnabled").checked;
+  CONFIG.music.autoplay = document.getElementById("cfg-musicAutoplay").checked;
+  CONFIG.music.volume = Math.max(0, Math.min(100, parseInt(val("cfg-musicVolume"),10) || 0)) / 100;
+}
+document.querySelector('[data-save="music"]').addEventListener("click", ()=>{
+  applyMusicTabToConfig();
+  if(!saveConfig()) return;
+  Music.applyConfig();
+  toast("Music settings saved");
+});
+
+/* ---- security (date-based secret) ---- */
+function applySecurityTabToConfig(){
+  const newDate = val("cfg-secretDate").trim();
+  const clue = val("cfg-passwordClue");
+  if(!newDate) return false;
+  CONFIG.security.secretDate = newDate;
+  CONFIG.security.clue = clue;
+  return true;
+}
+document.getElementById("savePasswordBtn").addEventListener("click", ()=>{
+  const errEl = document.getElementById("securityError");
+  if(!applySecurityTabToConfig()){
+    errEl.textContent = "Please choose a secret date.";
+    errEl.classList.remove("hidden");
+    return;
+  }
+  errEl.classList.add("hidden");
+  saveConfig();
+  applyTextConfig();
+  toast("Secret date saved");
+});
+
+/* ---- SAVE & DOWNLOAD WEBSITE (self-contained .html) ---- */
+
+// Pulls in any edits sitting in admin fields across every tab — not just the
+// one currently open — so nothing typed-but-not-yet-saved gets lost when
+// generating the download.
+function syncAllAdminTabsToConfig(){
+  applyGeneralTabToConfig();
+  applyOpeningTabToConfig();
+  applyBalloonsTabToConfig();
+  applyCakeTabToConfig();
+  applyMemoriesTabToConfig();
+  applyFinalTabToConfig();
+  applyMusicTabToConfig();
+  applySecurityTabToConfig(); // leaves the existing secret date alone if that field was blank
+}
+
+// Fetches a same-origin/relative asset (e.g. "memory/photo1.jpg") and turns
+// it into a data: URL. This only works when the browser is actually able to
+// read that file (e.g. the site is served over http/https, or the browser
+// permits local file fetches) — callers must handle the failure case, since
+// a browser cannot silently reach into arbitrary local files otherwise.
+async function fetchAsDataURL(url){
+  const res = await fetch(url);
+  if(!res.ok) throw new Error("fetch failed: " + res.status);
+  const blob = await res.blob();
+  return await new Promise((resolve, reject)=>{
+    const reader = new FileReader();
+    reader.onload = ()=> resolve(reader.result);
+    reader.onerror = reject;
+    reader.readAsDataURL(blob);
+  });
+}
+
+// Produces a deep copy of CONFIG with every asset embedded as a data: URL
+// wherever technically possible. Anything that can't be embedded is
+// reported back as a warning and cleared — never left as a path/reference
+// that would silently break when the file is opened elsewhere.
+async function embedAssetsForExport(){
+  const embedded = JSON.parse(JSON.stringify(CONFIG));
+  const warnings = [];
+
+  for(const m of embedded.memories){
+    if(m.photo && !m.photo.startsWith("data:")){
+      try{
+        m.photo = await fetchAsDataURL(m.photo);
+      }catch(err){
+        warnings.push(`the photo for "${m.title || "a memory"}" couldn't be embedded, so it was left out (that memory will show the heart placeholder)`);
+        m.photo = "";
+      }
+    }
+  }
+
+  if(embedded.music && embedded.music.src && !embedded.music.src.startsWith("data:")){
+    try{
+      embedded.music.src = await fetchAsDataURL(embedded.music.src);
+    }catch(err){
+      warnings.push("the background song couldn't be embedded, so it was removed from this download");
+      embedded.music.src = "";
+    }
+  }
+
+  return { embedded, warnings };
+}
+
+// Resets every piece of transient/session DOM state (popped balloons, a
+// half-eaten cake, an open admin panel, stray floating particles, whichever
+// screen happens to be showing, etc.) right before we snapshot the page —
+// the downloaded file must always open fresh at the very beginning.
+function prepareDomForExport(){
+  adminOverlay.classList.add("hidden");
+  confirmOverlay.classList.add("hidden");
+
+  Object.values(screens).forEach(s=> s.classList.remove("active"));
+  screens.opening.classList.add("active");
+  updateProgress("1");
+
+  envelope.classList.remove("open");
+  choiceRow.classList.add("hidden");
+  tapHint.classList.remove("hidden");
+  noBtn.removeAttribute("style");
+
+  balloonField.innerHTML = "";
+  balloonMessageEl.textContent = "";
+  balloonMessageCard.classList.add("hidden");
+  balloonMessageCard.classList.remove("show");
+  balloonModalBackdrop.classList.add("hidden");
+  balloonModalBackdrop.classList.remove("show");
+  balloonContinueBtn.classList.add("hidden");
+
+  cakeSvg.innerHTML = buildCakeMarkup();
+  cakeSvg.removeAttribute("style");
+  crumbLayer.innerHTML = "";
+  cakeProgressEl.textContent = CONFIG.cake.sub || "tap the cake for a bite";
+
+  secretDateInput.value = "";
+  pinError.classList.add("hidden");
+  datePickerWrap.classList.remove("shake");
+
+  document.getElementById("memoryDate").textContent = "";
+  document.getElementById("memoryTitle").textContent = "";
+  document.getElementById("memoryDesc").textContent = "";
+  document.getElementById("memoryCaption").textContent = "";
+  const mp = document.getElementById("memoryPhoto");
+  mp.removeAttribute("src");
+  mp.style.display = "none";
+  document.getElementById("memoryPhotoFallback").style.display = "flex";
+  document.getElementById("memoryIndex").textContent = "";
+  document.getElementById("timelineDots").innerHTML = "";
+
+  stopFinalScroll();
+  document.getElementById("finalScrollViewport").scrollTop = 0;
+
+  // the actual music bytes live in the baked-in config below, not this
+  // attribute — strip it so the same audio isn't embedded twice over
+  document.getElementById("bgMusic").removeAttribute("src");
+
+  document.querySelectorAll(".confetti-piece, .mini-heart, .decor-bit").forEach(el=> el.remove());
+  document.getElementById("balloonList").innerHTML = "";
+  document.getElementById("memoryList").innerHTML = "";
+}
+
+// Builds the full standalone HTML document: the current page's own markup,
+// reset to a pristine state, with the asset-complete config baked in as the
+// new starting default — so it opens correctly on any device, in any
+// browser, with zero dependency on this browser's localStorage.
+function buildStandaloneHtml(embeddedConfig){
+  prepareDomForExport();
+  const template = "<!DOCTYPE html>\n" + document.documentElement.outerHTML;
+
+  const buildId = uid() + uid();
+  let html = template.replace(
+    /const STORAGE_KEY = "[^"]*";/,
+    `const STORAGE_KEY = "bdaySiteConfig_v1__${buildId}";`
+  );
+
+  const startMarker = "/*##DEFAULT_CONFIG_START##*/";
+  const endMarker = "/*##DEFAULT_CONFIG_END##*/";
+  const startIdx = html.indexOf(startMarker);
+  const endIdx = html.indexOf(endMarker);
+  if(startIdx === -1 || endIdx === -1){
+    throw new Error("Could not find the config markers in the page template.");
+  }
+  let configLiteral = JSON.stringify(embeddedConfig);
+  // guard against any user-entered text containing "</script" and closing the tag early
+  configLiteral = configLiteral.replace(/<\/script/gi, "<\\/script");
+
+  return html.slice(0, startIdx + startMarker.length) + configLiteral + html.slice(endIdx);
+}
+
+function downloadTextFile(filename, content, mime){
+  const blob = new Blob([content], { type: mime });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement("a");
+  a.href = url;
+  a.download = filename;
+  document.body.appendChild(a);
+  a.click();
+  a.remove();
+  setTimeout(()=> URL.revokeObjectURL(url), 4000);
+}
+
+document.getElementById("downloadWebsiteBtn").addEventListener("click", async ()=>{
+  const btn = document.getElementById("downloadWebsiteBtn");
+  const statusEl = document.getElementById("downloadWebsiteStatus");
+  const originalLabel = btn.textContent;
+  btn.disabled = true;
+  btn.textContent = "Preparing your download...";
+  statusEl.textContent = "";
+
+  try{
+    syncAllAdminTabsToConfig();
+    saveConfig();
+
+    const { embedded, warnings } = await embedAssetsForExport();
+    const html = buildStandaloneHtml(embedded);
+
+    const niceName = (CONFIG.general.personName || "").trim()
+      .toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/(^-|-$)/g, "");
+    const filename = (niceName ? niceName + "-birthday-website" : "birthday-website") + ".html";
+    downloadTextFile(filename, html, "text/html");
+
+    // prepareDomForExport() closed the panel and cleared its dynamic lists —
+    // bring it back exactly as the user left it
+    populateAdminFields();
+    renderBalloonAdminList();
+    renderMemoryAdminList();
+    adminOverlay.classList.remove("hidden");
+
+    statusEl.textContent = warnings.length ? ("Note: " + warnings.join("; ") + ".") : "";
+    toast("Birthday website saved successfully ❤️");
+  } catch(err){
+    console.error("Save & Download failed:", err);
+    statusEl.textContent = "Something went wrong while preparing the download — please try again.";
+  } finally{
+    btn.disabled = false;
+    btn.textContent = originalLabel;
+  }
+});
+
+/* ---- backup ---- */
+document.getElementById("exportBtn").addEventListener("click", ()=>{
+  const blob = new Blob([JSON.stringify(CONFIG, null, 2)], { type: "application/json" });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement("a");
+  a.href = url;
+  a.download = "birthday-website-backup.json";
+  document.body.appendChild(a);
+  a.click();
+  a.remove();
+  URL.revokeObjectURL(url);
+});
+
+document.getElementById("importInput").addEventListener("change", (e)=>{
+  const file = e.target.files[0];
+  if(!file) return;
+  const reader = new FileReader();
+  reader.onload = ()=>{
+    try{
+      const parsed = JSON.parse(reader.result);
+      CONFIG = Object.assign({}, defaultConfig(), parsed);
+      saveConfig();
+      applyTextConfig();
+      populateAdminFields();
+      renderBalloonAdminList();
+      renderMemoryAdminList();
+      toast("Backup restored");
+    }catch(err){
+      alert("That file couldn't be read as a valid backup.");
+    }
+  };
+  reader.readAsText(file);
+});
+
+document.getElementById("resetBtn").addEventListener("click", ()=>{
+  confirmAction("Reset everything to default? This can't be undone.", ()=>{
+    CONFIG = defaultConfig();
+    saveConfig();
+    applyTextConfig();
+    populateAdminFields();
+    renderBalloonAdminList();
+    renderMemoryAdminList();
+    toast("Reset to defaults");
+  });
+});
+
+/* ---- shared admin helpers ---- */
+function escapeAttr(str){ return (str||"").replace(/"/g,"&quot;"); }
+function escapeHtml(str){ return (str||"").replace(/</g,"&lt;").replace(/>/g,"&gt;"); }
+
+function toast(msg){
+  let t = document.getElementById("adminToast");
+  if(!t){
+    t = document.createElement("div");
+    t.id = "adminToast";
+    t.style.cssText = "position:fixed;bottom:20px;left:50%;transform:translateX(-50%);background:#3a1420;color:#fff;padding:10px 18px;border-radius:999px;font-size:.85rem;z-index:400;opacity:0;transition:opacity .3s ease;pointer-events:none;";
+    document.body.appendChild(t);
+  }
+  t.textContent = msg;
+  t.style.opacity = "1";
+  clearTimeout(t._timer);
+  t._timer = setTimeout(()=> t.style.opacity = "0", 1800);
+}
+
+const confirmOverlay = document.getElementById("confirmOverlay");
+let confirmCallback = null;
+function confirmAction(text, cb){
+  document.getElementById("confirmText").textContent = text;
+  confirmCallback = cb;
+  confirmOverlay.classList.remove("hidden");
+}
+document.getElementById("confirmCancel").addEventListener("click", ()=>{
+  confirmOverlay.classList.add("hidden");
+  confirmCallback = null;
+});
+document.getElementById("confirmOk").addEventListener("click", ()=>{
+  if(confirmCallback) confirmCallback();
+  confirmOverlay.classList.add("hidden");
+  confirmCallback = null;
+});
+
+/* ============================================================
+   13. INIT
+============================================================ */
+applyTextConfig();
+goTo("opening");
+
+})();
+
+</script>
+</body>
+</html>
